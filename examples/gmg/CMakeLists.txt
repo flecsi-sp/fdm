@@ -29,7 +29,7 @@ add_executable(gmg
 
 target_link_libraries(gmg FleCSI::FleCSI
   FleCSI-SP-FDM::FleCSI-SP-FDM
-  yaml-cpp
+  yaml-cpp::yaml-cpp
 )
 
 #------------------------------------------------------------------------------#
