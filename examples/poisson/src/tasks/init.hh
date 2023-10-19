@@ -1,7 +1,7 @@
 #ifndef POISSON_TASKS_INIT_HH
 #define POISSON_TASKS_INIT_HH
 
-#include "types.hh"
+#include "../types.hh"
 
 namespace poisson {
 namespace task {

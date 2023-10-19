@@ -1,4 +1,4 @@
-#include "tasks/norm.hh"
+#include "norm.hh"
 
 using namespace flecsi;
 

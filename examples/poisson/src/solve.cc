@@ -1,6 +1,6 @@
+#include "solve.hh"
 #include "annotation.hh"
 #include "options.hh"
-#include "solve.hh"
 #include "state.hh"
 #include "tasks/norm.hh"
 #include "tasks/smooth.hh"

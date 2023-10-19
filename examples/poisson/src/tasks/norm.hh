@@ -1,7 +1,7 @@
 #ifndef POISSON_TASKS_NORM_HH
 #define POISSON_TASKS_NORM_HH
 
-#include "types.hh"
+#include "../types.hh"
 
 namespace poisson {
 namespace task {

@@ -6,8 +6,43 @@
 #include <flecsi/flog.hh>
 #include <flecsi/topo/narray/coloring_utils.hh>
 
+#include <ranges>
+
 namespace cartesian {
 
+namespace util {
+
+template<class T>
+constexpr std::enable_if_t<std::is_unsigned_v<T>, T>
+ceil_div(T a, T b) {
+  return a / b + !!(a % b); // avoids overflow in (a+(b-1))/b
+} // ceil_div
+
+template<class R>
+constexpr auto
+stride_view(R && r,
+  typename std::iterator_traits<decltype(std::begin(
+    std::declval<R>()))>::difference_type n,
+  decltype(n) o = 0) {
+  using I = std::make_unsigned_t<decltype(n)>;
+  I b{0};
+  const I sz = ceil_div<I>(std::size(r) - o, n); // before moving
+  return std::ranges::transform_view(std::ranges::iota_view{b, sz},
+    [r = std::forward<R>(r), n, o](
+      I i) -> decltype(auto) { return r[i * n + o]; });
+} // stride_view
+
+template<auto S, typename T>
+auto
+make_ids(T && t) {
+  return std::ranges::transform_view(
+    std::forward<T>(t), [](auto const & i) { return flecsi::topo::id<S>(i); });
+} // make_ids
+} // namespace util
+
+/*!
+  A node-centered (vertices) Cartesian mesh specialization.
+ */
 struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
 
   /*--------------------------------------------------------------------------*
@@ -16,10 +51,42 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
 
   enum index_space { vertices };
   using index_spaces = has<vertices>;
-  enum domain { interior, logical, all, global };
-  enum axis { x_axis, y_axis };
+
+  /// Mesh domains.
+  /// The domain identifies the supported iteration spaces on the mesh.
+  enum domain {
+    /// This domain includes the DOFs of the problem. It does not include the
+    /// dirichlet boundary vertices.
+    interior,
+    /// This domain includes the "logical" vertices, i.e., those that exist in a
+    /// raw partitioning of the domain into non-intersecting sets of vertices.
+    /// It does not include ghost vertices.
+    logical,
+    /// This domain includes all local vertices, including ghost cells.
+    all,
+    /// This domain includes all global cells.
+    global
+  };
+
+  /// Mesh axes.
+  /// The axis identifies a Cartesian coordinate axis on the mesh.
+  enum axis {
+    /// X-coordinate axis.
+    x_axis,
+    /// Y-coordinate axis.
+    y_axis
+  };
+
   using axes = has<x_axis, y_axis>;
-  enum boundary { low, high };
+
+  /// Boundary.
+  /// Identifies the low or high boundary along a particular axis.
+  enum boundary {
+    /// Low axis boundary.
+    low,
+    /// High axis boundary.
+    high
+  };
 
   using coord = base::coord;
   using gcoord = base::gcoord;
@@ -42,9 +109,13 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
     Interface.
    *--------------------------------------------------------------------------*/
 
+  /// Mesh Interface.
   template<class B>
   struct interface : B {
 
+    /// Return the size for the given axis and domain.
+    /// @tparam A  The mesh axis.
+    /// @tparam DM The mesh domain.
     template<axis A, domain DM = interior>
     std::size_t size() {
       if constexpr(DM == interior) {
@@ -77,20 +148,38 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
       return B::template global_id<mesh::vertices, A>(i);
     }
 
+    /// Return a range over the given axis and domain.
+    /// @tparam A  The mesh axis.
+    /// @tparam DM The mesh domain (excluding \em global).
+    ///
+    /// The range can be used to iterate over the cells in the given domain,
+    /// e.g.:
+    /// @code
+    ///   for(auto j: m.vertices<mesh::y_axis, mesh::interior>()) {
+    ///     for(auto i: m.vertices<mesh::x_axis, mesh::interior>()) {
+    ///       u[j][i] = 1.0;
+    ///     } // for
+    ///   } // for
+    /// @endcode
     template<axis A, domain DM = interior>
     FLECSI_INLINE_TARGET auto vertices() const {
+      flecsi::util::id b, e;
+
       if constexpr(DM == interior) {
-        // The outermost layer is either ghosts or fixed boundaries:
-        return flecsi::topo::make_ids<mesh::vertices>(
-          flecsi::util::iota_view<flecsi::util::id>(
-            1, B::template size<mesh::vertices, A, base::domain::all>() - 1));
+        // The outermost layer is either halo or fixed boundaries:
+        b = 1;
+        e = B::template size<mesh::vertices, A, base::domain::all>() - 1;
       }
       else if constexpr(DM == logical) {
-        return B::template range<mesh::vertices, A, base::domain::logical>();
+        b = 0;
+        e = B::template size<mesh::vertices, A, base::domain::logical>();
       }
       else if constexpr(DM == all) {
-        return B::template range<mesh::vertices, A, base::domain::all>();
+        b = 0;
+        e = B::template size<mesh::vertices, A, base::domain::all>();
       }
+
+      return util::make_ids<mesh::vertices>(std::ranges::iota_view{b, e});
     }
 
     template<axis A>
@@ -98,7 +187,7 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
       // The checkerboard extends across colors.  The (boundary) point with
       // global ID (0,0) is red; row is local, and 0 in the space of the
       // stride_view is the first interior vertex.
-      return flecsi::util::stride_view(vertices<A>(),
+      return util::stride_view(vertices<A>(),
         2,
         (global_id<(A == x_axis ? y_axis : x_axis)>(row) + global_id<A>(1)) %
           2);

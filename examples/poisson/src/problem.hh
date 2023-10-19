@@ -1,8 +1,8 @@
 #ifndef POISSON_PROBLEM_HH
 #define POISSON_PROBLEM_HH
 
-#include "initialize.hh"
 #include "control.hh"
+#include "initialize.hh"
 
 namespace poisson {
 namespace action {

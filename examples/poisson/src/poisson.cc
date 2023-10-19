@@ -1,5 +1,5 @@
-#include "annotation.hh"
 #include "analyze.hh"
+#include "annotation.hh"
 #include "control.hh"
 #include "finalize.hh"
 #include "initialize.hh"

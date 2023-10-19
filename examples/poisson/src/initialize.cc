@@ -1,5 +1,5 @@
-#include "control.hh"
 #include "initialize.hh"
+#include "control.hh"
 #include "options.hh"
 #include "state.hh"
 

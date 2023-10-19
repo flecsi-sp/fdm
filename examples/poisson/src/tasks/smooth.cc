@@ -1,4 +1,4 @@
-#include "tasks/smooth.hh"
+#include "smooth.hh"
 
 using namespace flecsi;
 
