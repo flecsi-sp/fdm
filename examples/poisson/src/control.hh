@@ -1,7 +1,7 @@
 #ifndef POISSON_CONTROL_HH
 #define POISSON_CONTROL_HH
 
-#include "cartesian/mesh.hh"
+#include "fdm/mesh.hh"
 
 #include <flecsi/flog.hh>
 #include <flecsi/run/control.hh>
@@ -37,7 +37,7 @@ struct control_policy : flecsi::run::control_base {
     point<cp::analyze>,
     point<cp::finalize>>;
 
-  cartesian::mesh::slot m;
+  fdm::mesh::slot m;
 }; // struct control_policy
 
 using control = flecsi::run::control<control_policy>;

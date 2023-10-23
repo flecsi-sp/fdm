@@ -15,7 +15,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 # Project.
 #------------------------------------------------------------------------------#
 
-project(FleCSI-SP-Cartesian LANGUAGES C CXX)
+project(FleCSI-SP-FDM LANGUAGES C CXX)
 set(CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -65,7 +65,7 @@ endif()
 # Documentation
 #------------------------------------------------------------------------------#
 
-set(PAGES_REPO "git@re-git.lanl.gov:flecsi-sp/cartesian.git"
+set(PAGES_REPO "git@re-git.lanl.gov:flecsi-sp/fdm.git"
   CACHE STRING "Pages repository for pages branch")
 option(ENABLE_DOCUMENTATION "Enable documentation" OFF)
 
@@ -106,7 +106,7 @@ if(ENABLE_DOCUMENTATION)
       DIRECTORY
         ${CMAKE_BINARY_DIR}/doc/
       DESTINATION
-        ${CMAKE_INSTALL_PREFIX}/share/doc/cartesian
+        ${CMAKE_INSTALL_PREFIX}/share/doc/fdm
       OPTIONAL
     )
   endif()
@@ -120,9 +120,9 @@ endif()
 # Add library.
 #------------------------------------------------------------------------------#
 
-add_library(FleCSI-SP-Cartesian INTERFACE)
-add_library(FleCSI-SP-Cartesian::FleCSI-SP-Cartesian ALIAS FleCSI-SP-Cartesian)
-target_include_directories(FleCSI-SP-Cartesian INTERFACE
+add_library(FleCSI-SP-FDM INTERFACE)
+add_library(FleCSI-SP-FDM::FleCSI-SP-FDM ALIAS FleCSI-SP-FDM)
+target_include_directories(FleCSI-SP-FDM INTERFACE
   $<INSTALL_INTERFACE:include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 

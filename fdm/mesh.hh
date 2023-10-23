@@ -1,5 +1,5 @@
-#ifndef CARTESIAN_MESH_HH
-#define CARTESIAN_MESH_HH
+#ifndef FDM_MESH_HH
+#define FDM_MESH_HH
 
 #include <flecsi/data.hh>
 #include <flecsi/execution.hh>
@@ -8,7 +8,7 @@
 
 #include <ranges>
 
-namespace cartesian {
+namespace fdm {
 
 namespace util {
 
@@ -293,6 +293,6 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
 
 }; // struct mesh
 
-} // namespace cartesian
+} // namespace fdm
 
-#endif // CARTESIAN_MESH_HH
+#endif // FDM_MESH_HH

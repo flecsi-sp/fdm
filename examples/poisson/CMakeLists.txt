@@ -20,5 +20,5 @@ add_executable(poisson
 #------------------------------------------------------------------------------#
 
 target_link_libraries(poisson FleCSI::FleCSI
-  FleCSI-SP-Cartesian::FleCSI-SP-Cartesian
+  FleCSI-SP-FDM::FleCSI-SP-FDM
 )
