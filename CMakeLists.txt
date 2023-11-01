@@ -130,4 +130,5 @@ target_include_directories(FleCSI-SP-FDM INTERFACE
 # Add examples.
 #------------------------------------------------------------------------------#
 
-add_subdirectory(examples/poisson)
+add_subdirectory(examples/gs)
+add_subdirectory(examples/gmg)

@@ -258,6 +258,10 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
     } // is_boundary
   }; // struct interface
 
+  static auto distribute(flecsi::Color nc, gcoord indices) {
+    return base::distribute(nc, indices);
+  }
+
   /*--------------------------------------------------------------------------*
     Color Method.
    *--------------------------------------------------------------------------*/
@@ -271,6 +275,16 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
 
     return {{idef}};
   } // color
+
+  static coloring color(colors const & parts, gcoord axis_extents) {
+    index_definition idef;
+    idef.axes = base::make_axes(parts, axis_extents);
+    for(auto & a : idef.axes) {
+      a.hdepth = 1;
+    }
+
+    return {{idef}};
+  }
 
   /*--------------------------------------------------------------------------*
     Initialization.
@@ -287,7 +301,7 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
   static void initialize(flecsi::data::topology_slot<mesh> & s,
     coloring const &,
     grect const & geometry) {
-    flecsi::execute<set_geometry>(s, geometry);
+    flecsi::execute<set_geometry, flecsi::mpi>(s, geometry);
   } // initialize
 
 }; // struct mesh
