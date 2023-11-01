@@ -49,5 +49,5 @@ poisson::action::solve(control_policy & cp) {
     flog(info) << "residual: " << err << " (" << ita << " iterations)"
                << std::endl;
     flog::flush();
-  } while(err > error_tol.value() && ita < max_iterations.value());
+  } while(err > opt::error_tol.value() && ita < opt::max_iterations.value());
 } // solve

@@ -2,6 +2,6 @@
 # Values specific to this target.
 #------------------------------------------------------------------------------#
 
-PROJECT_NAME = "Cartesian User API"
+PROJECT_NAME = "FDM User API"
 
 EXCLUDE_PATTERNS += */leg/* */mpi/* */hpx/*

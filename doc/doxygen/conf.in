@@ -7,15 +7,15 @@ PROJECT_NUMBER         = "Version: ${${PROJECT_NAME}_VERSION}"
 OUTPUT_DIRECTORY       = @CMAKE_BINARY_DIR@/doc/api
 HTML_OUTPUT            = @name@
 IMAGE_PATH             = @PROJECT_SOURCE_DIR@/doc/doxygen/images
-STRIP_FROM_PATH        = @PROJECT_SOURCE_DIR@/cartesian \
+STRIP_FROM_PATH        = @PROJECT_SOURCE_DIR@/fdm \
                          @CMAKE_BINARY_DIR@
-STRIP_FROM_INC_PATH    = @PROJECT_SOURCE_DIR@/cartesian \
+STRIP_FROM_INC_PATH    = @PROJECT_SOURCE_DIR@/fdm \
                          @CMAKE_BINARY_DIR@
-INPUT                  = @PROJECT_SOURCE_DIR@/cartesian \
+INPUT                  = @PROJECT_SOURCE_DIR@/fdm \
                          @PROJECT_SOURCE_DIR@/doc/doxygen/mainpage.md
 USE_MDFILE_AS_MAINPAGE = @PROJECT_SOURCE_DIR@/doc/doxygen/mainpage.md
 
-EXCLUDE_PATTERNS = @PROJECT_SOURCE_DIR@/cartesian/*.md \
+EXCLUDE_PATTERNS = @PROJECT_SOURCE_DIR@/fdm/*.md \
                    */test/*
 PREDEFINED = DOXYGEN \
              FLECSI_INLINE_TARGET=

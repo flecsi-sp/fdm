@@ -8,25 +8,15 @@
 #include "solve.hh"
 #include "state.hh"
 
-#include <flecsi/execution.hh>
-#include <flecsi/flog.hh>
+#include <flecsi/runtime.hh>
+
+using namespace flecsi;
 
 int
 main(int argc, char ** argv) {
-  flecsi::util::annotation::rguard<main_region> main_guard;
-
-  auto status = flecsi::initialize(argc, argv);
-  status = poisson::control::check_status(status);
-
-  if(status != flecsi::run::status::success) {
-    return status < flecsi::run::status::clean ? 0 : status;
-  }
-
-  flecsi::flog::add_output_stream("clog", std::clog, true);
-
-  status = flecsi::start(poisson::control::execute);
-
-  flecsi::finalize();
-
-  return status;
+  run::arguments args(argc, argv);
+  const run::dependencies_guard dg(args.dep);
+  const runtime run(args.cfg);
+  flog::add_output_stream("flog", std::clog, true);
+  return run.main<poisson::control>(args.act);
 } // main
