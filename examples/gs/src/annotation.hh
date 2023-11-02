@@ -1,5 +1,5 @@
-#ifndef POISSON_POISSON_HH
-#define POISSON_POISSON_HH
+#ifndef GS_GS_HH
+#define GS_GS_HH
 
 #include <flecsi/util/annotation.hh>
 
@@ -24,4 +24,4 @@ struct analyze_region : flecsi::util::annotation::region<user_execution> {
   inline static const std::string name{"analyze"};
 };
 
-#endif // POISSON_POISSON_HH
+#endif // GS_GS_HH

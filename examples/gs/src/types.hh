@@ -1,5 +1,5 @@
-#ifndef POISSON_TYPES_HH
-#define POISSON_TYPES_HH
+#ifndef GS_TYPES_HH
+#define GS_TYPES_HH
 
 #include "fdm/mesh.hh"
 
@@ -17,4 +17,4 @@ using field = flecsi::field<T, L>;
 
 } // namespace poisson
 
-#endif // POISSON_TYPES_HH
+#endif // GS_TYPES_HH

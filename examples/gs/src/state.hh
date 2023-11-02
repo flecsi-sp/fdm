@@ -1,5 +1,5 @@
-#ifndef POISSON_STATE_HH
-#define POISSON_STATE_HH
+#ifndef GS_STATE_HH
+#define GS_STATE_HH
 
 #include "types.hh"
 
@@ -14,4 +14,4 @@ inline const field<double>::definition<mesh, mesh::vertices> Aud;
 
 } // namespace poisson
 
-#endif // POISSON_STATE_HH
+#endif // GS_STATE_HH

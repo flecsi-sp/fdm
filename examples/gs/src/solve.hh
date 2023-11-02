@@ -1,5 +1,5 @@
-#ifndef POISSON_SOLVE_HH
-#define POISSON_SOLVE_HH
+#ifndef GS_SOLVE_HH
+#define GS_SOLVE_HH
 
 #include "control.hh"
 
@@ -12,4 +12,4 @@ inline control::action<solve, cp::solve> solve_action;
 } // namespace action
 } // namespace poisson
 
-#endif // POISSON_SOLVE_HH
+#endif // GS_SOLVE_HH

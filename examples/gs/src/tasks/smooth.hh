@@ -1,5 +1,5 @@
-#ifndef POISSON_TASKS_SMOOTH_HH
-#define POISSON_TASKS_SMOOTH_HH
+#ifndef GS_TASKS_SMOOTH_HH
+#define GS_TASKS_SMOOTH_HH
 
 #include "../types.hh"
 
@@ -16,4 +16,4 @@ void black(mesh::accessor<ro> m,
 } // namespace task
 } // namespace poisson
 
-#endif // POISSON_TASKS_SMOOTH_HH
+#endif // GS_TASKS_SMOOTH_HH

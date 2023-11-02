@@ -1,5 +1,5 @@
-#ifndef POISSON_OPTIONS_HH
-#define POISSON_OPTIONS_HH
+#ifndef GS_OPTIONS_HH
+#define GS_OPTIONS_HH
 
 #include "flecsi/execution.hh"
 
@@ -28,4 +28,4 @@ inline flecsi::program_option<double> error_tol("Poisson Options",
 
 } // namespace poisson::opt
 
-#endif // POISSON_OPTIONS_HH
+#endif // GS_OPTIONS_HH

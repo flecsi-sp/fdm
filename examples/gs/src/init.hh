@@ -1,5 +1,5 @@
-#ifndef POISSON_INITIALIZE_HH
-#define POISSON_INITIALIZE_HH
+#ifndef GS_INIT_HH
+#define GS_INIT_HH
 
 #include "control.hh"
 
@@ -12,4 +12,4 @@ inline control::action<init_mesh, cp::initialize> init_mesh_action;
 } // namespace action
 } // namespace poisson
 
-#endif // POISSON_INITIALIZE_HH
+#endif // GS_INIT_HH

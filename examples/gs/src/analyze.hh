@@ -1,5 +1,5 @@
-#ifndef POISSON_ANALYZE_HH
-#define POISSON_ANALYZE_HH
+#ifndef GS_ANALYZE_HH
+#define GS_ANALYZE_HH
 
 #include "control.hh"
 

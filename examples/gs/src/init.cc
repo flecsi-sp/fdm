@@ -1,4 +1,4 @@
-#include "initialize.hh"
+#include "init.hh"
 #include "control.hh"
 #include "options.hh"
 #include "state.hh"

@@ -1,5 +1,5 @@
-#ifndef POISSON_TASKS_IO_HH
-#define POISSON_TASKS_IO_HH
+#ifndef GS_TASKS_IO_HH
+#define GS_TASKS_IO_HH
 
 #include "../types.hh"
 
@@ -17,4 +17,4 @@ void print(mesh::accessor<ro> m, field<double>::accessor<ro, ro> fa);
 } // namespace task
 } // namespace poisson
 
-#endif // POISSON_TASKS_IO_HH
+#endif // GS_TASKS_IO_HH

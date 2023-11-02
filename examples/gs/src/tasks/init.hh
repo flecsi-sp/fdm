@@ -1,5 +1,5 @@
-#ifndef POISSON_TASKS_INIT_HH
-#define POISSON_TASKS_INIT_HH
+#ifndef GS_TASKS_INIT_HH
+#define GS_TASKS_INIT_HH
 
 #include "../types.hh"
 
@@ -21,4 +21,4 @@ void redblack(mesh::accessor<ro> m, field<double>::accessor<wo, na> fa);
 } // namespace task
 } // namespace poisson
 
-#endif // POISSON_TASKS_INIT_HH
+#endif // GS_TASKS_INIT_HH

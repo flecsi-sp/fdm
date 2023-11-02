@@ -1,0 +1,7 @@
+---
+max_iterations: 100
+error_tolerance: 1.0e6
+log_frequency: 1
+coords:
+  - [0.0, 0.0]
+  - [1.0, 1.0]

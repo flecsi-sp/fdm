@@ -2,11 +2,11 @@
 # Add an executable.
 #------------------------------------------------------------------------------#
 
-add_executable(poisson
+add_executable(gs
   src/poisson.cc
   src/analyze.cc
-  src/finalize.cc
-  src/initialize.cc
+  src/final.cc
+  src/init.cc
   src/problem.cc
   src/solve.cc
   src/tasks/init.cc
@@ -19,6 +19,6 @@ add_executable(poisson
 # Add the FleCSI libraries and dependencies.
 #------------------------------------------------------------------------------#
 
-target_link_libraries(poisson FleCSI::FleCSI
+target_link_libraries(gs FleCSI::FleCSI
   FleCSI-SP-FDM::FleCSI-SP-FDM
 )

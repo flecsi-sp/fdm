@@ -1,5 +1,5 @@
-#ifndef POISSON_TASKS_NORM_HH
-#define POISSON_TASKS_NORM_HH
+#ifndef GS_TASKS_NORM_HH
+#define GS_TASKS_NORM_HH
 
 #include "../types.hh"
 
@@ -19,4 +19,4 @@ void discrete_operator(mesh::accessor<ro> m,
 } // namespace task
 } // namespace poisson
 
-#endif // POISSON_TASKS_NORM_HH
+#endif // GS_TASKS_NORM_HH

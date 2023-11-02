@@ -1,5 +1,5 @@
-#ifndef POISSON_FINALIZE_HH
-#define POISSON_FINALIZE_HH
+#ifndef GS_FINAL_HH
+#define GS_FINAL_HH
 
 #include "control.hh"
 
@@ -12,4 +12,4 @@ inline control::action<finalize, cp::finalize> finalize_action;
 } // namespace action
 } // namespace poisson
 
-#endif // POISSON_FINALIZE_HH
+#endif // GS_FINAL_HH

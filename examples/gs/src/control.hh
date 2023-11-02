@@ -1,5 +1,5 @@
-#ifndef POISSON_CONTROL_HH
-#define POISSON_CONTROL_HH
+#ifndef GS_CONTROL_HH
+#define GS_CONTROL_HH
 
 #include "fdm/mesh.hh"
 
@@ -44,4 +44,4 @@ using control = flecsi::run::control<control_policy>;
 
 } // namespace poisson
 
-#endif // POISSON_CONTROL_HH
+#endif // GS_CONTROL_HH
