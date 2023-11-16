@@ -3,7 +3,7 @@
 using namespace flecsi;
 
 void
-poisson::task::red(mesh::accessor<ro> m,
+gs::task::red(mesh::accessor<ro> m,
   field<double>::accessor<rw, ro> ua,
   field<double>::accessor<ro, ro> fa) {
   auto u = m.mdspan<mesh::vertices>(ua);
@@ -26,7 +26,7 @@ poisson::task::red(mesh::accessor<ro> m,
 } // smooth
 
 void
-poisson::task::black(mesh::accessor<ro> m,
+gs::task::black(mesh::accessor<ro> m,
   field<double>::accessor<rw, ro> ua,
   field<double>::accessor<ro, ro> fa) {
   auto u = m.mdspan<mesh::vertices>(ua);

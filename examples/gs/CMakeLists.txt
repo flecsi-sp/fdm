@@ -3,7 +3,7 @@
 #------------------------------------------------------------------------------#
 
 add_executable(gs
-  src/poisson.cc
+  src/gs.cc
   src/analyze.cc
   src/final.cc
   src/init.cc

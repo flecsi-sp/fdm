@@ -3,13 +3,11 @@
 
 #include "control.hh"
 
-namespace poisson {
-namespace action {
+namespace gs::action {
 
 void init_mesh(control_policy &);
 inline control::action<init_mesh, cp::initialize> init_mesh_action;
 
-} // namespace action
-} // namespace poisson
+} // namespace gs::action
 
 #endif // GS_INIT_HH

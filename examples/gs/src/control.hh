@@ -6,7 +6,7 @@
 #include <flecsi/flog.hh>
 #include <flecsi/run/control.hh>
 
-namespace poisson {
+namespace gs {
 
 enum class cp { initialize, solve, analyze, finalize };
 
@@ -42,6 +42,6 @@ struct control_policy : flecsi::run::control_base {
 
 using control = flecsi::run::control<control_policy>;
 
-} // namespace poisson
+} // namespace gs
 
 #endif // GS_CONTROL_HH

@@ -4,7 +4,7 @@
 #include "control.hh"
 #include "init.hh"
 
-namespace poisson {
+namespace gs {
 namespace action {
 
 void problem(control_policy &);
@@ -12,6 +12,6 @@ inline control::action<problem, cp::initialize> problem_action;
 inline auto const problem_dep = problem_action.add(init_mesh_action);
 
 } // namespace action
-} // namespace poisson
+} // namespace gs
 
 #endif // GS_PROBLEM_HH

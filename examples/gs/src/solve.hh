@@ -3,13 +3,13 @@
 
 #include "control.hh"
 
-namespace poisson {
+namespace gs {
 namespace action {
 
 void solve(control_policy &);
 inline control::action<solve, cp::solve> solve_action;
 
 } // namespace action
-} // namespace poisson
+} // namespace gs
 
 #endif // GS_SOLVE_HH

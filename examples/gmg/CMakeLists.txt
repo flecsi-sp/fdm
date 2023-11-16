@@ -11,6 +11,9 @@ find_package(yaml-cpp REQUIRED)
 add_executable(gmg
   src/gmg.cc
   src/init.cc
+  src/tasks/comps.cc
+  src/tasks/init.cc
+  src/tasks/io.cc
 )
 
 #------------------------------------------------------------------------------#

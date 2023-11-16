@@ -20,7 +20,7 @@ inline flecsi::program_option<std::size_t> x_extents("x-extents",
   1,
   [](flecsi::any const & v, std::stringstream & ss) {
     const std::size_t value = flecsi::option_value<std::size_t>(v);
-    return value > 4
+    return value > 2
              ? true
              : (ss << "extents must be greater than 4" << value) && false;
   });
@@ -29,7 +29,7 @@ inline flecsi::program_option<std::size_t> y_extents("y-extents",
   1,
   [](flecsi::any const & v, std::stringstream & ss) {
     const std::size_t value = flecsi::option_value<std::size_t>(v);
-    return value > 4
+    return value > 2
              ? true
              : (ss << "extents must be greater than 4" << value) && false;
   });

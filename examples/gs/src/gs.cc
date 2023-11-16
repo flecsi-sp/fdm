@@ -18,5 +18,5 @@ main(int argc, char ** argv) {
   const run::dependencies_guard dg(args.dep);
   const runtime run(args.cfg);
   flog::add_output_stream("flog", std::clog, true);
-  return run.main<poisson::control>(args.act);
+  return run.main<gs::control>(args.act);
 } // main

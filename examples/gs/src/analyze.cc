@@ -11,7 +11,7 @@
 using namespace flecsi;
 
 void
-poisson::action::analyze(control_policy & cp) {
+gs::action::analyze(control_policy & cp) {
   util::annotation::rguard<analyze_region> guard;
   double sum =
     reduce<task::diff, exec::fold::sum>(cp.m, ud(cp.m), sd(cp.m)).get();

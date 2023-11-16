@@ -9,7 +9,7 @@ constexpr double K = 12.0;
 constexpr double L = 2.0;
 
 void
-poisson::task::eggcarton(mesh::accessor<ro> m,
+gs::task::eggcarton(mesh::accessor<ro> m,
   field<double>::accessor<wo, na> ua,
   field<double>::accessor<wo, na> fa,
   field<double>::accessor<wo, na> sa,
@@ -36,7 +36,7 @@ poisson::task::eggcarton(mesh::accessor<ro> m,
 } // eggcarton
 
 void
-poisson::task::constant(mesh::accessor<ro> m,
+gs::task::constant(mesh::accessor<ro> m,
   field<double>::accessor<wo, na> fa,
   double value) {
   auto f = m.mdspan<mesh::vertices>(fa);
@@ -48,8 +48,7 @@ poisson::task::constant(mesh::accessor<ro> m,
 }
 
 void
-poisson::task::redblack(mesh::accessor<ro> m,
-  field<double>::accessor<wo, na> fa) {
+gs::task::redblack(mesh::accessor<ro> m, field<double>::accessor<wo, na> fa) {
   auto f = m.mdspan<mesh::vertices>(fa);
   for(auto j : m.vertices<mesh::y_axis, mesh::interior>()) {
     forall(i, m.red<mesh::x_axis>(j), "red") {

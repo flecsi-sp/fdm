@@ -5,8 +5,7 @@
 
 #include <string>
 
-namespace poisson {
-namespace task {
+namespace gs::task {
 
 void io(mesh::accessor<ro> m,
   field<double>::accessor<ro, ro> ua,
@@ -14,7 +13,6 @@ void io(mesh::accessor<ro> m,
 
 void print(mesh::accessor<ro> m, field<double>::accessor<ro, ro> fa);
 
-} // namespace task
-} // namespace poisson
+} // namespace gs::task
 
 #endif // GS_TASKS_IO_HH

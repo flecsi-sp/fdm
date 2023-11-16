@@ -160,7 +160,7 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
     ///     } // for
     ///   } // for
     /// @endcode
-    template<axis A, domain DM = interior>
+    template<axis A, domain DM = interior, bool R = false>
     FLECSI_INLINE_TARGET auto vertices() const {
       flecsi::util::id b, e;
 
@@ -177,8 +177,17 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
         b = 0;
         e = B::template size<mesh::vertices, A, base::domain::all>();
       }
+      else if(DM == global) {
+        flog_fatal("illegal domain: you cannot iterate over the global domain");
+      } // if
 
-      return util::make_ids<mesh::vertices>(std::ranges::iota_view{b, e});
+      if constexpr(R) {
+        return util::make_ids<mesh::vertices>(
+          std::ranges::iota_view{b, e} | std::views::reverse);
+      }
+      else {
+        return util::make_ids<mesh::vertices>(std::ranges::iota_view{b, e});
+      }
     }
 
     template<axis A>

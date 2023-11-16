@@ -5,7 +5,7 @@
 using namespace flecsi;
 
 void
-poisson::task::io(mesh::accessor<ro> m,
+gs::task::io(mesh::accessor<ro> m,
   field<double>::accessor<ro, ro> ua,
   std::string filebase) {
   auto u = m.mdspan<mesh::vertices>(ua);
@@ -31,7 +31,7 @@ poisson::task::io(mesh::accessor<ro> m,
 } // io
 
 void
-poisson::task::print(mesh::accessor<ro> m, field<double>::accessor<ro, ro> fa) {
+gs::task::print(mesh::accessor<ro> m, field<double>::accessor<ro, ro> fa) {
   auto f = m.mdspan<mesh::vertices>(fa);
 
   std::stringstream ss;
@@ -43,4 +43,4 @@ poisson::task::print(mesh::accessor<ro> m, field<double>::accessor<ro, ro> fa) {
     ss << std::endl;
   } // for
   flog(info) << ss.str() << std::endl;
-}
+} // print

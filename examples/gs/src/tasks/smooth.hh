@@ -3,7 +3,7 @@
 
 #include "../types.hh"
 
-namespace poisson {
+namespace gs {
 namespace task {
 
 void red(mesh::accessor<ro> m,
@@ -14,6 +14,6 @@ void black(mesh::accessor<ro> m,
   field<double>::accessor<ro, ro> fa);
 
 } // namespace task
-} // namespace poisson
+} // namespace gs
 
 #endif // GS_TASKS_SMOOTH_HH

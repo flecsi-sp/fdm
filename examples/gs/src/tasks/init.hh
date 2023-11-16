@@ -3,8 +3,7 @@
 
 #include "../types.hh"
 
-namespace poisson {
-namespace task {
+namespace gs::task {
 
 void eggcarton(mesh::accessor<ro> m,
   field<double>::accessor<wo, na> ua,
@@ -18,7 +17,6 @@ void constant(mesh::accessor<ro> m,
 
 void redblack(mesh::accessor<ro> m, field<double>::accessor<wo, na> fa);
 
-} // namespace task
-} // namespace poisson
+} // namespace gs::task
 
 #endif // GS_TASKS_INIT_HH

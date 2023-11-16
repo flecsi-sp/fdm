@@ -3,7 +3,7 @@
 using namespace flecsi;
 
 double
-poisson::task::diff(mesh::accessor<ro> m,
+gs::task::diff(mesh::accessor<ro> m,
   field<double>::accessor<ro, ro> aa,
   field<double>::accessor<ro, ro> ba) {
   auto a = m.mdspan<mesh::vertices>(aa);
@@ -20,12 +20,12 @@ poisson::task::diff(mesh::accessor<ro> m,
 } // diff
 
 double
-poisson::task::scale(mesh::accessor<ro> m, double sum) {
+gs::task::scale(mesh::accessor<ro> m, double sum) {
   return m.dxdy() * sum;
 } // scale
 
 void
-poisson::task::discrete_operator(mesh::accessor<ro> m,
+gs::task::discrete_operator(mesh::accessor<ro> m,
   field<double>::accessor<ro, ro> ua,
   field<double>::accessor<rw, ro> Aua) {
   auto u = m.mdspan<mesh::vertices>(ua);

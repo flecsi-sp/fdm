@@ -3,7 +3,7 @@
 
 #include "../types.hh"
 
-namespace poisson {
+namespace gs {
 namespace task {
 
 double diff(mesh::accessor<ro> m,
@@ -17,6 +17,6 @@ void discrete_operator(mesh::accessor<ro> m,
   field<double>::accessor<rw, ro> Aua);
 
 } // namespace task
-} // namespace poisson
+} // namespace gs
 
 #endif // GS_TASKS_NORM_HH
