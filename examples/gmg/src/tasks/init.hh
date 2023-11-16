@@ -9,8 +9,7 @@ void constant(mesh::accessor<ro> m,
   field<double>::accessor<wo, na> fa,
   double value);
 
-void enumerate(mesh::accessor<ro> m,
-  field<double>::accessor<wo, na> fa);
+void enumerate(mesh::accessor<ro> m, field<double>::accessor<wo, na> fa);
 
 } // namespace gmg::task
 
