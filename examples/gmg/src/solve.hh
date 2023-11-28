@@ -6,7 +6,7 @@
 namespace gmg::action {
 
 void solve(control_policy &);
-inline control::action<solve, cp::solve> init_action;
+inline control::action<solve, cp::solve> solve_action;
 
 } // namespace gmg::action
 

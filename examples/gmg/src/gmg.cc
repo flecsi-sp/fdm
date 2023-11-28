@@ -1,6 +1,7 @@
 #include "control.hh"
 #include "init.hh"
 #include "options.hh"
+#include "solve.hh"
 #include "state.hh"
 
 #include <flecsi/runtime.hh>

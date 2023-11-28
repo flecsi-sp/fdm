@@ -53,26 +53,23 @@ action::init(control_policy & cp) {
     auto & m = *mh.emplace_back(std::make_unique<mesh::slot>());
     m.allocate(mesh::mpi_coloring{parts, axis_extents}, geom);
 
-    // execute<task::enumerate>(m, ud(m));
-    auto const & [ud_new, ud_old] = ud.get();
-    execute<task::constant>(m, ud_new(m), double(x_pow));
-    // execute<task::constant>(m, ud(m), 1.0);
+    if(config["problem"].as<std::string>() == "eggcarton") {
+      execute<task::eggcarton>(m, ud[0](m), fd(m), sd(m), Aud(m));
+    }
+    else if(config["problem"].as<std::string>() == "enumerate") {
+      execute<task::enumerate>(m, ud[0](m));
+      execute<task::enumerate>(m, fd(m));
+      execute<task::enumerate>(m, sd(m));
+      execute<task::enumerate>(m, Aud(m));
+    }
+    else if(config["problem"].as<std::string>() == "constant") {
+      execute<task::constant>(m, ud[0](m), double(x_pow));
+      execute<task::constant>(m, fd(m), x_pow);
+      execute<task::constant>(m, sd(m), x_pow);
+      execute<task::constant>(m, Aud(m), x_pow);
+    } // if
 
     vertices_x = std::pow(2, --x_pow) + 1;
     vertices_y = std::pow(2, --y_pow) + 1;
   } while(x_pow > 2 && y_pow > 2);
-
-  auto const & [ud_new, ud_old] = ud.get();
-  for(auto const & m : mh) {
-    execute<task::print>(*m, ud_new(*m));
-  } // for
-
-#if 1
-  auto & m0 = *mh[0].get();
-  auto & m1 = *mh[1].get();
-  // execute<task::full_weighting>(*m0, *m1, ud(*m0), ud(*m1));
-  // execute<task::print>(*m1, ud(*m1));
-  execute<task::bilinear_interpolation>(m1, m0, ud_new(m1), ud_new(m0));
-  execute<task::print>(m0, ud_new(m0));
-#endif
 } // setup
