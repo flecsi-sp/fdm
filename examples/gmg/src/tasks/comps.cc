@@ -54,6 +54,31 @@ task::bilinear_interpolation(mesh::accessor<ro> mc,
 } // bilinear_interpolation
 
 void
+task::damped_jacobi(mesh::accessor<ro> m,
+  field<double>::accessor<rw, ro> ua_new,
+  field<double>::accessor<rw, ro> ua_old,
+  field<double>::accessor<ro, ro> fa,
+  double omega) {
+  auto u_new = m.mdcolex<mesh::vertices>(ua_new);
+  auto u_old = m.mdcolex<mesh::vertices>(ua_old);
+  auto f = m.mdcolex<mesh::vertices>(fa);
+  const auto dxdy = m.dxdy();
+  const auto dx_over_dy = m.xdelta() / m.ydelta();
+  const auto dy_over_dx = m.ydelta() / m.xdelta();
+  const auto factor = 1.0 / (2 * (dx_over_dy + dy_over_dx));
+
+  forall(j, m.vertices<mesh::y_axis>(), "jacobi") {
+    for(auto i : m.vertices<mesh::x_axis>()) {
+      const double z =
+        factor *
+        (dxdy * f(i, j) + dy_over_dx * (u_old(i + 1, j) + u_old(i - 1, j)) +
+          dx_over_dy * (u_old(i, j + 1) + u_old(i, j - 1)));
+      u_new(i, j) = u_old(i, j) + omega * (z - u_old(i, j));
+    } // for
+  }; // forall
+} // damped_jacobi
+
+void
 task::red(mesh::accessor<ro> m,
   field<double>::accessor<rw, ro> ua,
   field<double>::accessor<ro, ro> fa) {

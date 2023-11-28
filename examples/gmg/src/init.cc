@@ -54,23 +54,25 @@ action::init(control_policy & cp) {
     m.allocate(mesh::mpi_coloring{parts, axis_extents}, geom);
 
     // execute<task::enumerate>(m, ud(m));
-    execute<task::constant>(m, ud(m), double(x_pow));
+    auto const & [ud_new, ud_old] = ud.get();
+    execute<task::constant>(m, ud_new(m), double(x_pow));
     // execute<task::constant>(m, ud(m), 1.0);
 
     vertices_x = std::pow(2, --x_pow) + 1;
     vertices_y = std::pow(2, --y_pow) + 1;
   } while(x_pow > 2 && y_pow > 2);
 
+  auto const & [ud_new, ud_old] = ud.get();
   for(auto const & m : mh) {
-    execute<task::print>(*m, ud(*m));
+    execute<task::print>(*m, ud_new(*m));
   } // for
 
 #if 1
-  auto const & m0 = mh[0].get();
-  auto const & m1 = mh[1].get();
+  auto & m0 = *mh[0].get();
+  auto & m1 = *mh[1].get();
   // execute<task::full_weighting>(*m0, *m1, ud(*m0), ud(*m1));
   // execute<task::print>(*m1, ud(*m1));
-  execute<task::bilinear_interpolation>(*m1, *m0, ud(*m1), ud(*m0));
-  execute<task::print>(*m0, ud(*m0));
+  execute<task::bilinear_interpolation>(m1, m0, ud_new(m1), ud_new(m0));
+  execute<task::print>(m0, ud_new(m0));
 #endif
 } // setup
