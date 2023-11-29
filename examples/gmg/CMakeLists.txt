@@ -9,6 +9,7 @@ find_package(yaml-cpp REQUIRED)
 #------------------------------------------------------------------------------#
 
 add_executable(gmg
+  src/final.cc
   src/gmg.cc
   src/init.cc
   src/solve.cc

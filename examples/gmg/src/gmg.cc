@@ -1,4 +1,5 @@
 #include "control.hh"
+#include "final.hh"
 #include "init.hh"
 #include "options.hh"
 #include "solve.hh"
