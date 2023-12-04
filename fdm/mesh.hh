@@ -140,12 +140,12 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
       else if constexpr(DM == global) {
         return B::template size<mesh::vertices, A, base::domain::global>();
       }
-    }
+    } // size
 
     template<axis A>
     FLECSI_INLINE_TARGET std::size_t global_id(std::size_t i) const {
       return B::template global_id<mesh::vertices, A>(i);
-    }
+    } // global_id
 
     /// Return a range over the given axis and domain.
     /// @tparam A  The mesh axis.
@@ -170,12 +170,12 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
         e = B::template size<mesh::vertices, A, base::domain::all>() - 1;
       }
       else if constexpr(DM == logical) {
-        b = 0;
-        e = B::template size<mesh::vertices, A, base::domain::logical>();
+        b = B::template offset<mesh::vertices, A, base::domain::logical>();
+        e = b + B::template size<mesh::vertices, A, base::domain::logical>();
       }
       else if constexpr(DM == all) {
         b = 0;
-        e = B::template size<mesh::vertices, A, base::domain::all>();
+        e = B::template size<mesh::vertices, A, mesh::domain::all>();
       }
       else if(DM == global) {
         flog_fatal("illegal domain: you cannot iterate over the global domain");
@@ -188,7 +188,7 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
       else {
         return util::make_ids<mesh::vertices>(std::ranges::iota_view{b, e});
       }
-    }
+    } // vertices
 
     template<axis A>
     FLECSI_INLINE_TARGET auto red(std::size_t row) const {

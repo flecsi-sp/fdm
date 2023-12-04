@@ -17,6 +17,7 @@ gs::action::init_mesh(control_policy & cp) {
 
   const auto num_colors =
     opt::colors.value() == -1 ? flecsi::processes() : opt::colors.value();
+  flog(info) << "colors: " << num_colors << std::endl;
 
   mesh::grect geometry;
   geometry[0][0] = 0.0;

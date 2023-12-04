@@ -2,6 +2,7 @@
 #include "state.hh"
 #include "tasks/comps.hh"
 #include "tasks/io.hh"
+#include "tasks/norm.hh"
 
 #include <flecsi/execution.hh>
 
@@ -40,10 +41,20 @@ action::solve(control_policy &) {
 
   double err{std::numeric_limits<double>::max()};
   std::size_t ita{0};
+  std::size_t sub{100};
 
   auto & m = *mh[0].get();
   do {
-    execute<task::damped_jacobi>(m, ud[0](m), ud[1](m), fd(m), 0.8);
-    ud.flip();
+    for(std::size_t i{0}; i<sub; ++i) {
+      execute<task::damped_jacobi>(m, ud[0](m), ud[1](m), fd(m), 0.8);
+      ud.flip();
+    } // for
+    ita += sub;
+
+    execute<task::discrete_operator>(m, ud[0](m), Aud(m));
+    auto residual = reduce<task::diff, exec::fold::sum>(m, fd(m), Aud(m));
+    err = std::sqrt(residual.get());
+    flog(info) << "residual: " << err << " (" << ita << " iterations)" << std::endl;
+
   } while(err > opt::tolerance && ita < opt::max_iterations);
 } // solve

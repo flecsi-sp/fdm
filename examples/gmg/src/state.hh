@@ -14,8 +14,8 @@ inline const field<double>::definition<mesh, mesh::vertices> rd;
 inline const field<double>::definition<mesh, mesh::vertices> Aud;
 
 namespace opt {
-inline double tolerance{10e-10};
-inline std::size_t max_iterations{100000};
+inline double tolerance{1.0e-4};
+inline std::size_t max_iterations{10000};
 } // namespace opt
 
 } // namespace gmg

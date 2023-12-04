@@ -16,6 +16,7 @@ add_executable(gmg
   src/tasks/comps.cc
   src/tasks/init.cc
   src/tasks/io.cc
+  src/tasks/norm.cc
 )
 
 #------------------------------------------------------------------------------#
