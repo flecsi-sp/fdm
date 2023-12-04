@@ -11,10 +11,11 @@ inline unknowns ud;
 inline const field<double>::definition<mesh, mesh::vertices> fd;
 inline const field<double>::definition<mesh, mesh::vertices> sd;
 inline const field<double>::definition<mesh, mesh::vertices> rd;
+inline const field<double>::definition<mesh, mesh::vertices> ed;
 inline const field<double>::definition<mesh, mesh::vertices> Aud;
 
 namespace opt {
-inline double tolerance{1.0e-4};
+inline double error_tolerance{1.0e-10};
 inline std::size_t max_iterations{10000};
 } // namespace opt
 

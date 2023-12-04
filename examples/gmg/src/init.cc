@@ -43,6 +43,13 @@ action::init(control_policy & cp) {
   geom[1][1] = config["coords"][1][1].as<double>();
 
   /*--------------------------------------------------------------------------*
+    Error control.
+   *--------------------------------------------------------------------------*/
+  
+  opt::error_tolerance = config["error_tolerance"].as<double>();
+  opt::max_iterations = config["max_iterations"].as<std::size_t>();
+
+  /*--------------------------------------------------------------------------*
     Initialize the mesh hierarchy.
    *--------------------------------------------------------------------------*/
 

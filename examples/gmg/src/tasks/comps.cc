@@ -139,3 +139,17 @@ task::residual(mesh::accessor<ro> m,
     } // for
   } // for
 } // residual
+
+void
+task::correction(mesh::accessor<ro> m,
+  field<double>::accessor<rw, ro> ua,
+  field<double>::accessor<ro, ro> ea) {
+  auto u = m.mdcolex<mesh::vertices>(ua);
+  auto e = m.mdcolex<mesh::vertices>(ea);
+
+  for(auto j : m.vertices<mesh::y_axis>()) {
+    for(auto i : m.vertices<mesh::x_axis>()) {
+      u(i,j) += e(i,j);
+    } // for
+  } // for
+} // correction
