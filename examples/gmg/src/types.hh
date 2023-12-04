@@ -14,14 +14,21 @@ template<typename T, flecsi::data::layout L = flecsi::data::layout::dense>
 using field = flecsi::field<T, L>;
 
 struct unknowns {
+  using type = const field<double>::definition<mesh, mesh::vertices>;
+
   auto operator[](int i) {
     return ud_[(flip_+i)%2];
   }
   auto flip() {
     ++flip_;
   }
+
+  operator type() {
+    return operator[](0);
+  }
+
 private:
-  const field<double>::definition<mesh, mesh::vertices> ud_[2];
+  type ud_[2];
   int flip_{0};
 }; // struct unknowns
 
