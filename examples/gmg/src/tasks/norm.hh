@@ -5,7 +5,11 @@
 
 namespace gmg::task {
 
-double diff(mesh::accessor<ro> m,
+double diff_sum_square(mesh::accessor<ro> m,
+  field<double>::accessor<ro, ro> aa,
+  field<double>::accessor<ro, ro> ba);
+
+double diff_max(mesh::accessor<ro> m,
   field<double>::accessor<ro, ro> aa,
   field<double>::accessor<ro, ro> ba);
 

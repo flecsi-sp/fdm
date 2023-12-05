@@ -1,3 +1,4 @@
+#include "norm.hh"
 #include "solve.hh"
 #include "state.hh"
 #include "tasks/comps.hh"
@@ -23,18 +24,13 @@ action::solve(control_policy &) {
   auto & m = *mh[0].get();
   do {
     for(std::size_t i{0}; i<sub; ++i) {
-      flog(error) << "jacobi" << std::endl;
       execute<task::damped_jacobi>(m, ud[0](m), ud[1](m), fd(m), 0.8);
       ud.flip();
     } // for
     ita += sub;
 
-#if 0
-    execute<task::discrete_operator>(m, ud[0](m), Aud(m));
-    auto residual = reduce<task::diff, exec::fold::sum>(m, fd(m), Aud(m));
-    err = std::sqrt(residual.get());
-    flog(info) << "residual: " << err << " (" << ita << " iterations)" << std::endl;
-#endif
+    flog(info) << "residual: " << norm::l2() << " (" << ita << " iterations)" << std::endl;
+    flog(info) << "max: " << norm::max() << " (" << ita << " iterations)" << std::endl;
 
   } while(err > opt::error_tolerance && ita < opt::max_iterations);
 #endif
@@ -71,10 +67,7 @@ action::solve(control_policy &) {
       ud.flip();
     } // for
 
-    execute<task::discrete_operator>(mf, ud[0](mf), Aud(mf));
-    auto residual = reduce<task::diff, exec::fold::sum>(mf, fd(mf), Aud(mf));
-    err = std::sqrt(residual.get());
-    flog(info) << "residual: " << err << " (" << ita << " iterations)" << std::endl;
+    flog(info) << "residual: " << norm::l2() << " (" << ita << " iterations)" << std::endl;
 
     ++ita;
   } while(err > opt::error_tolerance && ita < opt::max_iterations);

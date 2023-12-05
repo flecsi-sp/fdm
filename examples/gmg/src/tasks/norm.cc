@@ -2,7 +2,7 @@
 
 using namespace gmg;
 
-double task::diff(mesh::accessor<ro> m,
+double task::diff_sum_square(mesh::accessor<ro> m,
   field<double>::accessor<ro, ro> aa,
   field<double>::accessor<ro, ro> ba) {
   auto a = m.mdcolex<mesh::vertices>(aa);
@@ -16,6 +16,22 @@ double task::diff(mesh::accessor<ro> m,
   } // for
 
   return sum;
+} // diff
+
+double task::diff_max(mesh::accessor<ro> m,
+  field<double>::accessor<ro, ro> aa,
+  field<double>::accessor<ro, ro> ba) {
+  auto a = m.mdcolex<mesh::vertices>(aa);
+  auto b = m.mdcolex<mesh::vertices>(ba);
+
+  double max{0};
+  for(auto j : m.vertices<mesh::y_axis>()) {
+    for(auto i : m.vertices<mesh::x_axis>()) {
+      max = std::max(max, std::abs(a(i,j)-b(i,j)));
+    } // for
+  } // for
+
+  return max;
 } // diff
 
 void task::discrete_operator(mesh::accessor<ro> m,

@@ -53,6 +53,7 @@ action::init(control_policy & cp) {
     Initialize the mesh hierarchy.
    *--------------------------------------------------------------------------*/
 
+  int l{0};
   do {
     mesh::gcoord axis_extents{vertices_x, vertices_y};
     flog(info) << "vertices_x: " << vertices_x << " vertices_y: " << vertices_y
@@ -61,7 +62,17 @@ action::init(control_policy & cp) {
     m.allocate(mesh::mpi_coloring{parts, axis_extents}, geom);
 
     if(config["problem"].as<std::string>() == "eggcarton") {
-      execute<task::eggcarton>(m, ud[0](m), fd(m), sd(m), Aud(m));
+      if(l++ == 0) {
+        execute<task::eggcarton>(m, ud[0](m), fd(m), sd(m), Aud(m));
+        execute<task::io>(m, fd(m), "rhs");
+        execute<task::io>(m, sd(m), "actual");
+      }
+      else {
+        execute<task::constant>(m, ud[0](m), 0.0);
+        execute<task::constant>(m, fd(m), 0.0);
+        execute<task::constant>(m, sd(m), 0.0);
+        execute<task::constant>(m, Aud(m), 0.0);
+      } // if
     }
     else if(config["problem"].as<std::string>() == "enumerate") {
       execute<task::enumerate>(m, ud[0](m));

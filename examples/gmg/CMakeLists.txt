@@ -12,6 +12,7 @@ add_executable(gmg
   src/final.cc
   src/gmg.cc
   src/init.cc
+  src/norm.cc
   src/solve.cc
   src/tasks/comps.cc
   src/tasks/init.cc
