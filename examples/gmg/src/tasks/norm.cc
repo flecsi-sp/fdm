@@ -2,7 +2,8 @@
 
 using namespace gmg;
 
-double task::diff_sum_square(mesh::accessor<ro> m,
+double
+task::diff_sum_square(mesh::accessor<ro> m,
   field<double>::accessor<ro, ro> aa,
   field<double>::accessor<ro, ro> ba) {
   auto a = m.mdcolex<mesh::vertices>(aa);
@@ -11,14 +12,15 @@ double task::diff_sum_square(mesh::accessor<ro> m,
   double sum{0};
   for(auto j : m.vertices<mesh::y_axis>()) {
     for(auto i : m.vertices<mesh::x_axis>()) {
-      sum += pow(a(i,j) - b(i,j), 2);
+      sum += pow(a(i, j) - b(i, j), 2);
     } // for
   } // for
 
   return sum;
 } // diff
 
-double task::diff_max(mesh::accessor<ro> m,
+double
+task::diff_max(mesh::accessor<ro> m,
   field<double>::accessor<ro, ro> aa,
   field<double>::accessor<ro, ro> ba) {
   auto a = m.mdcolex<mesh::vertices>(aa);
@@ -27,14 +29,15 @@ double task::diff_max(mesh::accessor<ro> m,
   double max{0};
   for(auto j : m.vertices<mesh::y_axis>()) {
     for(auto i : m.vertices<mesh::x_axis>()) {
-      max = std::max(max, std::abs(a(i,j)-b(i,j)));
+      max = std::max(max, std::abs(a(i, j) - b(i, j)));
     } // for
   } // for
 
   return max;
 } // diff
 
-void task::discrete_operator(mesh::accessor<ro> m,
+void
+task::discrete_operator(mesh::accessor<ro> m,
   field<double>::accessor<ro, ro> ua,
   field<double>::accessor<rw, ro> Aua) {
   auto u = m.mdcolex<mesh::vertices>(ua);
@@ -46,7 +49,9 @@ void task::discrete_operator(mesh::accessor<ro> m,
 
   for(auto j : m.vertices<mesh::y_axis>()) {
     for(auto i : m.vertices<mesh::x_axis>()) {
-      Au(i,j) = w * (2.0 * (dx_over_dy + dy_over_dx) * u(i,j) - dy_over_dx * (u(i + 1,j) + u(i - 1,j)) - dx_over_dy * (u(i, j+1) + u(i, j-1)));
+      Au(i, j) = w * (2.0 * (dx_over_dy + dy_over_dx) * u(i, j) -
+                       dy_over_dx * (u(i + 1, j) + u(i - 1, j)) -
+                       dx_over_dy * (u(i, j + 1) + u(i, j - 1)));
     } // for
   } // for
 } // discrete_operator

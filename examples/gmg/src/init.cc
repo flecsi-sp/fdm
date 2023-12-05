@@ -45,9 +45,11 @@ action::init(control_policy & cp) {
   /*--------------------------------------------------------------------------*
     Error control.
    *--------------------------------------------------------------------------*/
-  
+
   opt::error_tolerance = config["error_tolerance"].as<double>();
   opt::max_iterations = config["max_iterations"].as<std::size_t>();
+  flog(info) << "Error Tolerance: " << opt::error_tolerance << std::endl;
+  flog(info) << "Max Iterations: " << opt::max_iterations << std::endl;
 
   /*--------------------------------------------------------------------------*
     Initialize the mesh hierarchy.
@@ -63,25 +65,25 @@ action::init(control_policy & cp) {
 
     if(config["problem"].as<std::string>() == "eggcarton") {
       if(l++ == 0) {
-        execute<task::eggcarton>(m, ud[0](m), fd(m), sd(m), Aud(m));
+        execute<task::eggcarton>(m, ud(m), fd(m), sd(m), Aud(m));
         execute<task::io>(m, fd(m), "rhs");
         execute<task::io>(m, sd(m), "actual");
       }
       else {
-        execute<task::constant>(m, ud[0](m), 0.0);
+        execute<task::constant>(m, ud(m), 0.0);
         execute<task::constant>(m, fd(m), 0.0);
         execute<task::constant>(m, sd(m), 0.0);
         execute<task::constant>(m, Aud(m), 0.0);
       } // if
     }
     else if(config["problem"].as<std::string>() == "enumerate") {
-      execute<task::enumerate>(m, ud[0](m));
+      execute<task::enumerate>(m, ud(m));
       execute<task::enumerate>(m, fd(m));
       execute<task::enumerate>(m, sd(m));
       execute<task::enumerate>(m, Aud(m));
     }
     else if(config["problem"].as<std::string>() == "constant") {
-      execute<task::constant>(m, ud[0](m), double(x_pow));
+      execute<task::constant>(m, ud(m), double(x_pow));
       execute<task::constant>(m, fd(m), x_pow);
       execute<task::constant>(m, sd(m), x_pow);
       execute<task::constant>(m, Aud(m), x_pow);

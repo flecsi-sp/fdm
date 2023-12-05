@@ -149,7 +149,7 @@ task::correction(mesh::accessor<ro> m,
 
   for(auto j : m.vertices<mesh::y_axis>()) {
     for(auto i : m.vertices<mesh::x_axis>()) {
-      u(i,j) += e(i,j);
+      u(i, j) += e(i, j);
     } // for
   } // for
 } // correction

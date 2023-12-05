@@ -23,7 +23,7 @@ gmg::task::io(mesh::accessor<ro> m,
     const double y = m.value<mesh::y_axis>(j);
     for(auto i : m.vertices<mesh::x_axis, mesh::logical>()) {
       const double x = m.value<mesh::x_axis>(i);
-      solution << x << " " << y << " " << u(i,j) << std::endl;
+      solution << x << " " << y << " " << u(i, j) << std::endl;
     } // for
   } // for
 } // io

@@ -45,11 +45,11 @@ gmg::task::eggcarton(mesh::accessor<ro> m,
     const double y = m.value<mesh::y_axis>(j);
     for(auto i : m.vertices<mesh::x_axis, mesh::logical>()) {
       const double x = m.value<mesh::x_axis>(i);
-      f(i,j) = sq_klpi * sin(K * PI * x) * sin(L * PI * y);
+      f(i, j) = sq_klpi * sin(K * PI * x) * sin(L * PI * y);
       const double solution = sin(K * PI * x) * sin(L * PI * y);
-      s(i,j) = solution;
-      Au(i,j) = 0.0;
-      u(i,j) = 0.0;
+      s(i, j) = solution;
+      Au(i, j) = 0.0;
+      u(i, j) = 0.0;
     } // for
   }; // forall
 } // eggcarton

@@ -13,11 +13,12 @@ using mesh = fdm::mesh;
 template<typename T, flecsi::data::layout L = flecsi::data::layout::dense>
 using field = flecsi::field<T, L>;
 
+// Change to std::swap
 struct unknowns {
   using type = const field<double>::definition<mesh, mesh::vertices>;
 
   auto operator[](int i) {
-    return ud_[(flip_+i)%2];
+    return ud_[(flip_ + i) % 2];
   }
   auto flip() {
     ++flip_;
