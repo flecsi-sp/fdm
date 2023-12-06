@@ -1,5 +1,6 @@
-#include "solve.hh"
 #include "norm.hh"
+#include "mg.hh"
+#include "solve.hh"
 #include "state.hh"
 #include "tasks/comps.hh"
 #include "tasks/init.hh"
@@ -41,7 +42,7 @@ action::solve(control_policy &) {
   } while(err > opt::error_tolerance && ita < opt::max_iterations);
 #endif
 
-#if 1 // Two-Grid Method
+#if 0 // Two-Grid Method
   std::size_t pre{5};
   std::size_t post{5};
 
@@ -77,6 +78,20 @@ action::solve(control_policy &) {
       std::swap(urf, vrf);
       execute<task::damped_jacobi>(mf, urf, vrf, fd(mf), 0.8);
     } // for
+
+    err = norm::l2();
+    flog(info) << "residual: " << err << " (" << ita << " iterations)"
+               << std::endl;
+    flog(info) << "max: " << norm::max() << " (" << ita << " iterations)"
+               << std::endl;
+
+    ++ita;
+  } while(err > opt::error_tolerance && ita < opt::max_iterations);
+#endif
+
+#if 1 // V-Cycle
+  do {
+    vcycle(0);
 
     err = norm::l2();
     flog(info) << "residual: " << err << " (" << ita << " iterations)"
