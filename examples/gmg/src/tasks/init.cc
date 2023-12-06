@@ -39,8 +39,6 @@ gmg::task::eggcarton(mesh::accessor<ro> m,
   auto Au = m.mdcolex<mesh::vertices>(Aua);
   const double sq_klpi = pow(PI, 2) * (pow(K, 2) + pow(L, 2));
 
-  flog(info) << "dxdy: " << m.dxdy() << std::endl;
-
   forall(j, (m.vertices<mesh::y_axis, mesh::logical>()), "init_eggcarton") {
     const double y = m.value<mesh::y_axis>(j);
     for(auto i : m.vertices<mesh::x_axis, mesh::logical>()) {

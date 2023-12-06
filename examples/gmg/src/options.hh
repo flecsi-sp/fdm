@@ -15,8 +15,8 @@ inline flecsi::program_option<std::string> config("yaml file",
              : (ss << "file(" << value << ") has invalid suffix") && false;
   });
 
-inline flecsi::program_option<std::size_t> x_extents("x-extents",
-  "The x extents of the mesh as a power of 2(>4).",
+inline flecsi::program_option<std::size_t> x_levels("x-levels",
+  "The x levels of the mesh hierarchy.",
   1,
   [](flecsi::any const & v, std::stringstream & ss) {
     const std::size_t value = flecsi::option_value<std::size_t>(v);
@@ -24,8 +24,8 @@ inline flecsi::program_option<std::size_t> x_extents("x-extents",
              ? true
              : (ss << "extents must be greater than 4" << value) && false;
   });
-inline flecsi::program_option<std::size_t> y_extents("y-extents",
-  "The y extents of the mesh as a power of 2(>4).",
+inline flecsi::program_option<std::size_t> y_levels("y-levels",
+  "The y levels of the mesh hierarchy.",
   1,
   [](flecsi::any const & v, std::stringstream & ss) {
     const std::size_t value = flecsi::option_value<std::size_t>(v);

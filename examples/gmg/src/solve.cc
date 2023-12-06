@@ -1,6 +1,6 @@
-#include "norm.hh"
-#include "mg.hh"
 #include "solve.hh"
+#include "mg.hh"
+#include "norm.hh"
 #include "state.hh"
 #include "tasks/comps.hh"
 #include "tasks/init.hh"
@@ -21,7 +21,7 @@ action::solve(control_policy &) {
   std::size_t ita{0};
 
 #if 0 // Jacobi
-  std::size_t sub{100 > opt::max_iterations ? opt::max_iterations : 100};
+  std::size_t sub{100 > param::max_iterations ? param::max_iterations : 100};
 
   auto & m = *mh[0].get();
   auto ur = ud(m);
@@ -39,7 +39,7 @@ action::solve(control_policy &) {
     flog(info) << "max: " << norm::max() << " (" << ita << " iterations)"
                << std::endl;
 
-  } while(err > opt::error_tolerance && ita < opt::max_iterations);
+  } while(err > param::error_tolerance && ita < param::max_iterations);
 #endif
 
 #if 0 // Two-Grid Method
@@ -86,12 +86,12 @@ action::solve(control_policy &) {
                << std::endl;
 
     ++ita;
-  } while(err > opt::error_tolerance && ita < opt::max_iterations);
+  } while(err > param::error_tolerance && ita < param::max_iterations);
 #endif
 
 #if 1 // V-Cycle
   do {
-    vcycle(0);
+    vcycle(param::fine_level);
 
     err = norm::l2();
     flog(info) << "residual: " << err << " (" << ita << " iterations)"
@@ -100,7 +100,7 @@ action::solve(control_policy &) {
                << std::endl;
 
     ++ita;
-  } while(err > opt::error_tolerance && ita < opt::max_iterations);
+  } while(err > param::error_tolerance && ita < param::max_iterations);
 #endif
 
 } // solve
