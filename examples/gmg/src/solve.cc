@@ -42,6 +42,14 @@ action::solve(control_policy &) {
   } while(err > param::error_tolerance && ita < param::max_iterations);
 #endif
 
+#if 1 // MG Components
+  auto & mf = *mh[0].get();
+  auto & mc = *mh[1].get();
+
+  execute<task::full_weighting>(mf, mc, rd(mf), fd(mc));
+  execute<task::print>(mc, fd(mc));
+#endif
+
 #if 0 // Two-Grid Method
   std::size_t pre{5};
   std::size_t post{5};
@@ -89,7 +97,7 @@ action::solve(control_policy &) {
   } while(err > param::error_tolerance && ita < param::max_iterations);
 #endif
 
-#if 1 // V-Cycle
+#if 0 // V-Cycle
   do {
     vcycle(param::fine_level);
 

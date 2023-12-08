@@ -112,6 +112,13 @@ action::init(control_policy & cp) {
       execute<task::enumerate>(m, sd(m));
       execute<task::enumerate>(m, Aud(m));
     }
+    else if(config["problem"].as<std::string>() == "bilinear") {
+      execute<task::bilinear>(m, ud(m), 1.0, 1.0, 0.0);
+      execute<task::bilinear>(m, fd(m), 1.0, 1.0, 0.0);
+      execute<task::bilinear>(m, sd(m), 1.0, 1.0, 0.0);
+      execute<task::bilinear>(m, rd(m), 1.0, 1.0, 0.0);
+      execute<task::bilinear>(m, Aud(m), 1.0, 1.0, 0.0);
+    }
     else if(config["problem"].as<std::string>() == "constant") {
       execute<task::constant>(m, ud(m), util::level(index));
       execute<task::constant>(m, fd(m), util::level(index));

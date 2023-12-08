@@ -5,20 +5,20 @@ using namespace gmg;
 void
 task::full_weighting(mesh::accessor<ro> mf,
   mesh::accessor<ro> mc,
-  field<double>::accessor<ro, ro> ffa,
+  field<double>::accessor<ro, ro> rfa,
   field<double>::accessor<rw, ro> fca) {
-  auto ff = mf.mdcolex<mesh::vertices>(ffa);
+  auto rf = mf.mdcolex<mesh::vertices>(rfa);
   auto fc = mc.mdcolex<mesh::vertices>(fca);
 
   for(auto j : mc.vertices<mesh::y_axis, mesh::interior>()) {
     auto fj = 2 * j - 1;
     for(auto i : mc.vertices<mesh::x_axis, mesh::interior>()) {
       auto fi = 2 * i - 1;
-      fc(i, j) = 0.0625 * (ff(fi - 1, fj - 1) + ff(fi - 1, fj + 1) +
-                            ff(fi + 1, fj - 1) + ff(fi + 1, fj + 1) +
-                            2.0 * (ff(fi, fj - 1) + ff(fi, fj + 1) +
-                                    ff(fi - 1, fj) + ff(fi + 1, fj)) +
-                            4.0 * ff(fi, fj));
+      fc(i, j) = 0.0625 * (rf(fi - 1, fj - 1) + rf(fi - 1, fj + 1) +
+                            rf(fi + 1, fj - 1) + rf(fi + 1, fj + 1) +
+                            2.0 * (rf(fi, fj - 1) + rf(fi, fj + 1) +
+                                    rf(fi - 1, fj) + rf(fi + 1, fj)) +
+                            4.0 * rf(fi, fj));
     } // for
   } // for
 } // full_weighting
@@ -26,10 +26,10 @@ task::full_weighting(mesh::accessor<ro> mf,
 void
 task::bilinear_interpolation(mesh::accessor<ro> mc,
   mesh::accessor<ro> mf,
-  field<double>::accessor<ro, ro> fca,
-  field<double>::accessor<rw, ro> ffa) {
-  auto fc = mc.mdcolex<mesh::vertices>(fca);
-  auto ff = mf.mdcolex<mesh::vertices>(ffa);
+  field<double>::accessor<ro, ro> uca,
+  field<double>::accessor<rw, ro> efa) {
+  auto uc = mc.mdcolex<mesh::vertices>(uca);
+  auto ef = mf.mdcolex<mesh::vertices>(efa);
 
   for(auto j : mf.vertices<mesh::y_axis, mesh::interior>()) {
     auto cj = (j - 1) / 2 + 1;
@@ -37,17 +37,17 @@ task::bilinear_interpolation(mesh::accessor<ro> mc,
       auto ci = (i - 1) / 2 + 1;
 
       if(i % 2 && j % 2) {
-        ff(i, j) = 0.25 * (fc(ci, cj) + fc(ci - 1, cj) + fc(ci, cj - 1) +
-                            fc(ci - 1, cj - 1));
+        ef(i, j) = 0.25 * (uc(ci, cj) + uc(ci - 1, cj) + uc(ci, cj - 1) +
+                            uc(ci - 1, cj - 1));
       }
       else if(i % 2) {
-        ff(i, j) = 0.5 * (fc(ci, cj) + fc(ci - 1, cj));
+        ef(i, j) = 0.5 * (uc(ci, cj) + uc(ci - 1, cj));
       }
       else if(j % 2) {
-        ff(i, j) = 0.5 * (fc(ci, cj) + fc(ci, cj - 1));
+        ef(i, j) = 0.5 * (uc(ci, cj) + uc(ci, cj - 1));
       }
       else {
-        ff(i, j) = fc(ci, cj);
+        ef(i, j) = uc(ci, cj);
       } // if
     } // for
   } // for
