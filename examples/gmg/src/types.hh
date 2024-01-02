@@ -13,25 +13,32 @@ using mesh = fdm::mesh;
 template<typename T, flecsi::data::layout L = flecsi::data::layout::dense>
 using field = flecsi::field<T, L>;
 
-// Change to std::swap
-struct unknowns {
-  using type = const field<double>::definition<mesh, mesh::vertices>;
+template<typename T>
+struct dual_field {
+  using type = const field<T>::template definition<mesh, mesh::vertices>;
 
-  auto operator[](int i) {
-    return ud_[(flip_ + i) % 2];
-  }
   auto flip() {
     ++flip_;
-  }
+  } // flip
 
-  operator type() {
-    return operator[](0);
-  }
+  /*!
+    Return the requested field reference.
+
+    @tparam S The topology slot type.
+    @param  s The topology slot instance.
+    @param  i The index of the field value to return.
+   */
+  template<typename S>
+  auto operator()(S & s, int i = 0) const {
+    auto idx = (flip_ + i) % 2;
+    return fd_[idx](s);
+    //return fd_[(flip_ + i) % 2](s);
+  } // operator
 
 private:
-  type ud_[2];
+  type fd_[2];
   int flip_{0};
-}; // struct unknowns
+};
 
 } // namespace gmg
 

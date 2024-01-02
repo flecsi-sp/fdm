@@ -6,7 +6,7 @@
 namespace gmg::task {
 
 void io(mesh::accessor<ro> m,
-  field<double>::accessor<ro, ro> ua,
+  field<double>::accessor<ro, ro> fa,
   std::string filebase);
 
 void print(mesh::accessor<ro> m, field<double>::accessor<ro, ro> fa);

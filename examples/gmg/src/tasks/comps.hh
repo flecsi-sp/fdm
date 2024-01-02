@@ -32,7 +32,7 @@ void bilinear_interpolation(mesh::accessor<ro> mc,
 
 void damped_jacobi(mesh::accessor<ro> m,
   field<double>::accessor<rw, ro> u_new,
-  field<double>::accessor<rw, ro> u_old,
+  field<double>::accessor<ro, ro> u_old,
   field<double>::accessor<ro, ro> fa,
   double omega);
 

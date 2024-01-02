@@ -12,17 +12,20 @@ gmg::task::enumerate(mesh::accessor<ro> m, field<double>::accessor<wo, na> fa) {
 } // constant
 
 void
-gmg::task::bilinear(mesh::accessor<ro> m, field<double>::accessor<wo, na> fa,
-    double M, double N, double D) {
+gmg::task::bilinear(mesh::accessor<ro> m,
+  field<double>::accessor<wo, na> fa,
+  double M,
+  double N,
+  double D) {
   auto f = m.mdcolex<mesh::vertices>(fa);
   for(auto j : m.vertices<mesh::y_axis, mesh::logical>()) {
-    const auto y = m.value<mesh::y_axis>(j);
+    auto y = m.value<mesh::y_axis>(j);
     for(auto i : m.vertices<mesh::x_axis, mesh::logical>()) {
-      const auto x = m.value<mesh::x_axis>(i);
-      f(i, j) = D + M*x + N*y;
+      auto x = m.value<mesh::x_axis>(i);
+      f(i, j) = M * x + N * y + D;
     } // for
   }; // forall
-} // constant
+} // bilinear
 
 void
 gmg::task::constant(mesh::accessor<ro> m,

@@ -7,8 +7,7 @@ namespace gmg {
 
 inline std::vector<std::unique_ptr<mesh::slot>> mh;
 
-inline const field<double>::definition<mesh, mesh::vertices> ud;
-inline const field<double>::definition<mesh, mesh::vertices> vd; /* jacobi */
+inline dual_field<double> ud;
 inline const field<double>::definition<mesh, mesh::vertices> fd;
 inline const field<double>::definition<mesh, mesh::vertices> sd;
 inline const field<double>::definition<mesh, mesh::vertices> rd;

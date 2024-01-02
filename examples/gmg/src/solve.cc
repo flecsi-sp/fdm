@@ -24,12 +24,13 @@ action::solve(control_policy &) {
   std::size_t sub{100 > param::max_iterations ? param::max_iterations : 100};
 
   auto & m = *mh[0].get();
-  auto ur = ud(m);
-  auto vr = vd(m);
+  execute<task::constant>(m, ud(m,1), 0.0);
+  ud.flip();
+
   do {
     for(std::size_t i{0}; i < sub; ++i) {
-      std::swap(ur, vr);
-      execute<task::damped_jacobi>(m, ur, vr, fd(m), 0.8);
+      execute<task::damped_jacobi>(m, ud(m), ud(m,1), fd(m), 0.8);
+      ud.flip();
     } // for
     ita += sub;
 
@@ -42,49 +43,40 @@ action::solve(control_policy &) {
   } while(err > param::error_tolerance && ita < param::max_iterations);
 #endif
 
-#if 1 // MG Components
-  auto & mf = *mh[0].get();
-  auto & mc = *mh[1].get();
-
-  execute<task::full_weighting>(mf, mc, rd(mf), fd(mc));
-  execute<task::print>(mc, fd(mc));
-#endif
-
 #if 0 // Two-Grid Method
   std::size_t pre{5};
   std::size_t post{5};
 
   auto & mf = *mh[0].get();
   auto & mc = *mh[1].get();
-  auto urf = ud(mf);
-  auto urc = ud(mc);
-  auto vrf = vd(mf);
-  auto vrc = vd(mc);
+  execute<task::constant>(mf, ud(mf,1), 0.0);
+  ud.flip();
 
   do {
     // Pre Smoothing
     for(std::size_t i{0}; i < pre; ++i) {
-      std::swap(urf, vrf);
-      execute<task::damped_jacobi>(mf, urf, vrf, fd(mf), 0.8);
+      execute<task::damped_jacobi>(mf, ud(mf), ud(mf,1), fd(mf), 0.8);
+      ud.flip();
     } // for
 
-    execute<task::residual>(mf, urf, fd(mf), rd(mf));
+    execute<task::residual>(mf, ud(mf), fd(mf), rd(mf));
     execute<task::full_weighting>(mf, mc, rd(mf), fd(mc));
-    execute<task::constant>(mc, urc, 0.0);
+    execute<task::constant>(mc, ud(mc), 0.0);
+    execute<task::constant>(mc, ud(mc,1), 0.0);
 
     // "Solve" on coarse grid
     for(std::size_t i{0}; i < 500; ++i) {
-      std::swap(urc, vrc);
-      execute<task::damped_jacobi>(mc, urc, vrc, fd(mc), 0.8);
+      execute<task::damped_jacobi>(mc, ud(mc), ud(mc,1), fd(mc), 0.8);
+      ud.flip();
     } // for
 
-    execute<task::bilinear_interpolation>(mc, mf, urc, ed(mf));
-    execute<task::correction>(mf, urf, ed(mf));
+    execute<task::bilinear_interpolation>(mc, mf, ud(mc), ed(mf));
+    execute<task::correction>(mf, ud(mf), ed(mf));
 
     // Post Smoothing
     for(std::size_t i{0}; i < post; ++i) {
-      std::swap(urf, vrf);
-      execute<task::damped_jacobi>(mf, urf, vrf, fd(mf), 0.8);
+      execute<task::damped_jacobi>(mf, ud(mf), ud(mf,1), fd(mf), 0.8);
+      ud.flip();
     } // for
 
     err = norm::l2();

@@ -5,7 +5,6 @@
 #include "state.hh"
 
 namespace gmg::util {
-
   inline auto level(std::size_t index) {
     return param::fine_level - index;
   } // level

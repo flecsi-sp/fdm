@@ -6,8 +6,8 @@
 
 namespace gmg::norm {
 
-double l2();
-double max();
+double l2(/* std::size_t level */);
+double max(/* std::size_t level */);
 
 } // namespace gmg::norm
 

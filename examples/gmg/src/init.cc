@@ -96,6 +96,7 @@ action::init(control_policy & cp) {
     if(config["problem"].as<std::string>() == "eggcarton") {
       if(index == 0) {
         execute<task::eggcarton>(m, ud(m), fd(m), sd(m), Aud(m));
+        execute<task::constant>(m, rd(m), 0.0);
         execute<task::io>(m, fd(m), "rhs");
         execute<task::io>(m, sd(m), "actual");
       }
@@ -103,6 +104,7 @@ action::init(control_policy & cp) {
         execute<task::constant>(m, ud(m), 0.0);
         execute<task::constant>(m, fd(m), 0.0);
         execute<task::constant>(m, sd(m), 0.0);
+        execute<task::constant>(m, rd(m), 0.0);
         execute<task::constant>(m, Aud(m), 0.0);
       } // if
     }

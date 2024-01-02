@@ -11,9 +11,9 @@ task::full_weighting(mesh::accessor<ro> mf,
   auto fc = mc.mdcolex<mesh::vertices>(fca);
 
   for(auto j : mc.vertices<mesh::y_axis, mesh::interior>()) {
-    auto fj = 2 * j - 1;
+    auto fj = 2 * j;
     for(auto i : mc.vertices<mesh::x_axis, mesh::interior>()) {
-      auto fi = 2 * i - 1;
+      auto fi = 2 * i;
       fc(i, j) = 0.0625 * (rf(fi - 1, fj - 1) + rf(fi - 1, fj + 1) +
                             rf(fi + 1, fj - 1) + rf(fi + 1, fj + 1) +
                             2.0 * (rf(fi, fj - 1) + rf(fi, fj + 1) +
@@ -36,6 +36,11 @@ task::bilinear_interpolation(mesh::accessor<ro> mc,
     for(auto i : mf.vertices<mesh::x_axis, mesh::interior>()) {
       auto ci = (i - 1) / 2 + 1;
 
+#if 0
+      flog(info) << "indices: (" << i << "," << j << ") -> (" << ci << "," << cj
+                 << ")" << std::endl;
+#endif
+
       if(i % 2 && j % 2) {
         ef(i, j) = 0.25 * (uc(ci, cj) + uc(ci - 1, cj) + uc(ci, cj - 1) +
                             uc(ci - 1, cj - 1));
@@ -56,7 +61,7 @@ task::bilinear_interpolation(mesh::accessor<ro> mc,
 void
 task::damped_jacobi(mesh::accessor<ro> m,
   field<double>::accessor<rw, ro> ua_new,
-  field<double>::accessor<rw, ro> ua_old,
+  field<double>::accessor<ro, ro> ua_old,
   field<double>::accessor<ro, ro> fa,
   double omega) {
   auto u_new = m.mdcolex<mesh::vertices>(ua_new);
