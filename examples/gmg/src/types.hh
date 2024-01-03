@@ -30,9 +30,7 @@ struct dual_field {
    */
   template<typename S>
   auto operator()(S & s, int i = 0) const {
-    auto idx = (flip_ + i) % 2;
-    return fd_[idx](s);
-    //return fd_[(flip_ + i) % 2](s);
+    return fd_[(flip_ + i) % 2](s);
   } // operator
 
 private:

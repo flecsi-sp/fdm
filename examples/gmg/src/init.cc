@@ -97,6 +97,7 @@ action::init(control_policy & cp) {
       if(index == 0) {
         execute<task::eggcarton>(m, ud(m), fd(m), sd(m), Aud(m));
         execute<task::constant>(m, rd(m), 0.0);
+        execute<task::constant>(m, ed(m), 0.0);
         execute<task::io>(m, fd(m), "rhs");
         execute<task::io>(m, sd(m), "actual");
       }
@@ -105,6 +106,7 @@ action::init(control_policy & cp) {
         execute<task::constant>(m, fd(m), 0.0);
         execute<task::constant>(m, sd(m), 0.0);
         execute<task::constant>(m, rd(m), 0.0);
+        execute<task::constant>(m, ed(m), 0.0);
         execute<task::constant>(m, Aud(m), 0.0);
       } // if
     }
@@ -119,6 +121,7 @@ action::init(control_policy & cp) {
       execute<task::bilinear>(m, fd(m), 1.0, 1.0, 0.0);
       execute<task::bilinear>(m, sd(m), 1.0, 1.0, 0.0);
       execute<task::bilinear>(m, rd(m), 1.0, 1.0, 0.0);
+      execute<task::bilinear>(m, ed(m), 1.0, 1.0, 0.0);
       execute<task::bilinear>(m, Aud(m), 1.0, 1.0, 0.0);
     }
     else if(config["problem"].as<std::string>() == "constant") {

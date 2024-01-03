@@ -43,6 +43,17 @@ action::solve(control_policy &) {
   } while(err > param::error_tolerance && ita < param::max_iterations);
 #endif
 
+#if 1 // Grid Transfer
+  auto & mf = *mh[0].get();
+  auto & mc = *mh[1].get();
+  execute<task::residual>(mf, ud(mf), fd(mf), rd(mf));
+  execute<task::print>(mf, ud(mf));
+  execute<task::full_weighting>(mf, mc, rd(mf), fd(mc));
+  execute<task::io>(mc, fd(mc), "fw");
+  execute<task::bilinear_interpolation>(mc, mf, ud(mc), ed(mf));
+  execute<task::io>(mf, ed(mf), "bl");
+#endif
+
 #if 0 // Two-Grid Method
   std::size_t pre{5};
   std::size_t post{5};

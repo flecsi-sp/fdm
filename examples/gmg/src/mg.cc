@@ -13,7 +13,7 @@ gmg::vcycle(std::size_t level) {
   if(level == param::vcycle_direct) {
     flog(warn) << "Direct solve level(index): " << level << "("
                << util::index(level) << ")" << std::endl;
-    // "Solve"
+    // FIXME "Solve"
     for(std::size_t i{0}; i < 1000; ++i) {
       execute<task::damped_jacobi>(mf, ud(mf), ud(mf,1), fd(mf), 0.8);
       ud.flip();
