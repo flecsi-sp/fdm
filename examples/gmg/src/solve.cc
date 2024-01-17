@@ -43,6 +43,27 @@ action::solve(control_policy &) {
   } while(err > param::error_tolerance && ita < param::max_iterations);
 #endif
 
+#if 0 // Red-Black Gauss Seidel
+  std::size_t sub{100 > param::max_iterations ? param::max_iterations : 100};
+
+  auto & m = *mh[0].get();
+
+  do {
+    for(std::size_t i{0}; i < sub; ++i) {
+      execute<task::red>(m, ud(m), fd(m));
+      execute<task::black>(m, ud(m), fd(m));
+    } // for
+    ita += sub;
+
+    err = norm::l2();
+    flog(info) << "residual: " << err << " (" << ita << " iterations)"
+               << std::endl;
+    flog(info) << "max: " << norm::max() << " (" << ita << " iterations)"
+               << std::endl;
+
+  } while(err > param::error_tolerance && ita < param::max_iterations);
+#endif
+
 #if 1 // Grid Transfer
   auto & mf = *mh[0].get();
   auto & mc = *mh[1].get();
