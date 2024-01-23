@@ -11,6 +11,7 @@
 #include <flecsi/runtime.hh>
 
 using namespace flecsi;
+using namespace gs;
 
 int
 main(int argc, char ** argv) {
@@ -22,7 +23,13 @@ main(int argc, char ** argv) {
     std::cerr << e.what() << '\n' << g.usage(argc ? argv[0] : "");
     return 1;
   }
+
   const flecsi::run::dependencies_guard dg;
+  run::config cfg;
+  cfg.flog.tags = {opt::flog_tags};
+  cfg.flog.verbose = {opt::flog_verbose};
+  const runtime run(cfg);
+
   flog::add_output_stream("clog", std::clog, true);
-  return flecsi::runtime().control<gs::control>();
+  return run.control<control>();
 } // main
