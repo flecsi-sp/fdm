@@ -8,7 +8,7 @@ You can build using the following spack environment:
 ```python
 spack:
   specs:
-  - flecsi@2.3-beta
+  - flecsi@2.3-beta+flog+graphviz++hdf5++kokkos backend=legion build_type=Debug caliper_detail=medium ^legion network=gasnet conduit=mpi
   - yaml-cpp
   view: true
   concretizer:
