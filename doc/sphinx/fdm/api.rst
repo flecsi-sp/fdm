@@ -2,7 +2,7 @@
 
    <br />
 
-.. _api:
+.. _fdm_api:
 
 FDM: API Reference
 ******************
