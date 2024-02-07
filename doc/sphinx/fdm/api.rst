@@ -4,8 +4,8 @@
 
 .. _fdm_api:
 
-FDM: API Reference
-******************
+API Reference
+*************
 
 The `API documentation <../api/user/index.html>`_ describes the FVM
 specialization interface.
