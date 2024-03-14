@@ -4,7 +4,7 @@
 
 PROJECT_LOGO           = @PROJECT_SOURCE_DIR@/doc/doxygen/flecsi.png
 PROJECT_NUMBER         = "Version: ${${PROJECT_NAME}_VERSION}"
-OUTPUT_DIRECTORY       = @CMAKE_BINARY_DIR@/doc/api
+OUTPUT_DIRECTORY       = @CMAKE_BINARY_DIR@/doc/fdm-api
 HTML_OUTPUT            = @name@
 IMAGE_PATH             = @PROJECT_SOURCE_DIR@/doc/doxygen/images
 STRIP_FROM_PATH        = @PROJECT_SOURCE_DIR@/fdm \
