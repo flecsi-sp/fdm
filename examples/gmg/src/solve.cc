@@ -24,13 +24,12 @@ action::solve(control_policy &) {
   std::size_t sub{100 > param::max_iterations ? param::max_iterations : 100};
 
   auto & m = *mh[0].get();
-  execute<task::constant>(m, ud(m,1), 0.0);
-  ud.flip();
+  execute<task::constant>(m, ud(m), 0.0);
 
   do {
     for(std::size_t i{0}; i < sub; ++i) {
-      execute<task::damped_jacobi>(m, ud(m), ud(m,1), fd(m), 0.8);
       ud.flip();
+      execute<task::damped_jacobi>(m, ud(m), ud(m,1), fd(m), 0.8);
     } // for
     ita += sub;
 
@@ -64,7 +63,7 @@ action::solve(control_policy &) {
   } while(err > param::error_tolerance && ita < param::max_iterations);
 #endif
 
-#if 1 // Grid Transfer
+#if 0 // Grid Transfer
   auto & mf = *mh[0].get();
   auto & mc = *mh[1].get();
   execute<task::residual>(mf, ud(mf), fd(mf), rd(mf));
@@ -81,14 +80,13 @@ action::solve(control_policy &) {
 
   auto & mf = *mh[0].get();
   auto & mc = *mh[1].get();
-  execute<task::constant>(mf, ud(mf,1), 0.0);
-  ud.flip();
+  execute<task::constant>(mf, ud(mf), 0.0);
 
   do {
     // Pre Smoothing
     for(std::size_t i{0}; i < pre; ++i) {
-      execute<task::damped_jacobi>(mf, ud(mf), ud(mf,1), fd(mf), 0.8);
       ud.flip();
+      execute<task::damped_jacobi>(mf, ud(mf), ud(mf,1), fd(mf), 0.8);
     } // for
 
     execute<task::residual>(mf, ud(mf), fd(mf), rd(mf));
@@ -98,8 +96,8 @@ action::solve(control_policy &) {
 
     // "Solve" on coarse grid
     for(std::size_t i{0}; i < 500; ++i) {
-      execute<task::damped_jacobi>(mc, ud(mc), ud(mc,1), fd(mc), 0.8);
       ud.flip();
+      execute<task::damped_jacobi>(mc, ud(mc), ud(mc,1), fd(mc), 0.8);
     } // for
 
     execute<task::bilinear_interpolation>(mc, mf, ud(mc), ed(mf));
@@ -107,8 +105,8 @@ action::solve(control_policy &) {
 
     // Post Smoothing
     for(std::size_t i{0}; i < post; ++i) {
-      execute<task::damped_jacobi>(mf, ud(mf), ud(mf,1), fd(mf), 0.8);
       ud.flip();
+      execute<task::damped_jacobi>(mf, ud(mf), ud(mf,1), fd(mf), 0.8);
     } // for
 
     err = norm::l2();
@@ -133,6 +131,15 @@ action::solve(control_policy &) {
 
     ++ita;
   } while(err > param::error_tolerance && ita < param::max_iterations);
+#endif
+
+#if 0 // FMG
+
+  fmg(param::fine_level);
+
+  err = norm::l2();
+  flog(info) << "residual: " << err << std::endl;
+  flog(info) << "max: " << norm::max() << std::endl;
 #endif
 
 } // solve

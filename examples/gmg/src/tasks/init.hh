@@ -17,6 +17,31 @@ void constant(mesh::accessor<ro> m,
   field<double>::accessor<wo, na> fa,
   double value);
 
+void fouriermodes(mesh::accessor<ro> m,
+  field<double>::accessor<wo, na> ua,
+  double kk,
+  double ll);
+
+void fourier_fw(mesh::accessor<ro> m,
+  field<double>::accessor<wo, na> ua,
+  double kk,
+  double ll);
+
+void fourier_interp(mesh::accessor<ro> m,
+  field<double>::accessor<wo, na> ua,
+  double kk,
+  double ll);
+
+void fourier_residual(mesh::accessor<ro> m,
+  field<double>::accessor<wo, na> ua,
+  double kk,
+  double ll);
+
+void gs_eigenvector(mesh::accessor<ro> m,
+  field<double>::accessor<wo, na> ua,
+  double kk,
+  double ll);
+
 void eggcarton(mesh::accessor<ro> m,
   field<double>::accessor<wo, na> ua,
   field<double>::accessor<wo, na> fa,

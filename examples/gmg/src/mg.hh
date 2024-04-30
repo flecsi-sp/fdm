@@ -6,6 +6,7 @@
 namespace gmg {
 
 void vcycle(std::size_t level);
+void fmg(std::size_t level);
 
 } // namespace gmg
 

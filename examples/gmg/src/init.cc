@@ -31,16 +31,16 @@ action::init(control_policy & cp) {
   auto y_levels = opt::y_levels.value();
 
   param::fine_level = std::min(x_levels, y_levels);
-  param::vcycle_direct = config["vcycle_direct"].as<std::size_t>();
+  param::mg_direct = config["mg_direct"].as<std::size_t>();
 
-  flog_assert(param::fine_level > param::vcycle_direct,
+  flog_assert(param::fine_level > param::mg_direct,
     "fine level(" << param::fine_level
                   << ") must be greater than direct solver level("
-                  << param::vcycle_direct << ")");
+                  << param::mg_direct << ")");
 
   std::stringstream ss;
   ss << "Fine Level: " << param::fine_level << std::endl;
-  ss << "Direct Solver Level: " << param::vcycle_direct << std::endl;
+  ss << "Direct Solver Level: " << param::mg_direct << std::endl;
 
   /*--------------------------------------------------------------------------*
     Distribution for all grids is based on the fine grid.
@@ -80,8 +80,9 @@ action::init(control_policy & cp) {
     Sovler parameters.
    *--------------------------------------------------------------------------*/
 
-  param::vcycle_pre = config["vcycle_pre"].as<std::size_t>();
-  param::vcycle_post = config["vcycle_post"].as<std::size_t>();
+  param::mg_pre = config["mg_pre"].as<std::size_t>();
+  param::mg_post = config["mg_post"].as<std::size_t>();
+  param::mg_cycles = config["mg_cycles"].as<std::size_t>();
 
   /*--------------------------------------------------------------------------*
     Initialize the mesh hierarchy.
@@ -96,6 +97,7 @@ action::init(control_policy & cp) {
     if(config["problem"].as<std::string>() == "eggcarton") {
       if(index == 0) {
         execute<task::eggcarton>(m, ud(m), fd(m), sd(m), Aud(m));
+        execute<task::constant>(m, ud(m, 1), 0.0);
         execute<task::constant>(m, rd(m), 0.0);
         execute<task::constant>(m, ed(m), 0.0);
         execute<task::io>(m, fd(m), "rhs");
@@ -103,6 +105,7 @@ action::init(control_policy & cp) {
       }
       else {
         execute<task::constant>(m, ud(m), 0.0);
+        execute<task::constant>(m, ud(m, 1), 0.0);
         execute<task::constant>(m, fd(m), 0.0);
         execute<task::constant>(m, sd(m), 0.0);
         execute<task::constant>(m, rd(m), 0.0);
@@ -112,12 +115,14 @@ action::init(control_policy & cp) {
     }
     else if(config["problem"].as<std::string>() == "enumerate") {
       execute<task::enumerate>(m, ud(m));
+      execute<task::constant>(m, ud(m, 1), 0.0);
       execute<task::enumerate>(m, fd(m));
       execute<task::enumerate>(m, sd(m));
       execute<task::enumerate>(m, Aud(m));
     }
     else if(config["problem"].as<std::string>() == "bilinear") {
       execute<task::bilinear>(m, ud(m), 1.0, 1.0, 0.0);
+      execute<task::constant>(m, ud(m, 1), 0.0);
       execute<task::bilinear>(m, fd(m), 1.0, 1.0, 0.0);
       execute<task::bilinear>(m, sd(m), 1.0, 1.0, 0.0);
       execute<task::bilinear>(m, rd(m), 1.0, 1.0, 0.0);
@@ -126,9 +131,19 @@ action::init(control_policy & cp) {
     }
     else if(config["problem"].as<std::string>() == "constant") {
       execute<task::constant>(m, ud(m), util::level(index));
+      execute<task::constant>(m, ud(m, 1), 0.0);
       execute<task::constant>(m, fd(m), util::level(index));
       execute<task::constant>(m, sd(m), util::level(index));
       execute<task::constant>(m, Aud(m), util::level(index));
+    }
+    else if(config["problem"].as<std::string>() == "verification") {
+      execute<task::constant>(m, ud(m), 0.0);
+      execute<task::constant>(m, ud(m, 1), 0.0);
+      execute<task::constant>(m, fd(m), 0.0);
+      execute<task::constant>(m, ed(m), 0.0);
+      execute<task::constant>(m, sd(m), 0.0);
+      execute<task::constant>(m, rd(m), 0.0);
+      execute<task::constant>(m, Aud(m), 0.0);
     } // if
 
     vertices_x = std::pow(2, --x_levels) + 1;
@@ -137,5 +152,5 @@ action::init(control_policy & cp) {
                << ") X vertices: " << vertices_x
                << " Y vertices: " << vertices_y << std::endl;
     ++index;
-  } while(x_levels >= param::vcycle_direct && y_levels >= param::vcycle_direct);
+  } while(x_levels >= param::mg_direct && y_levels >= param::mg_direct);
 } // setup

@@ -4,7 +4,6 @@
 
 using namespace flecsi;
 
-constexpr double PI = 3.14159;
 constexpr double K = 12.0;
 constexpr double L = 2.0;
 
@@ -18,7 +17,7 @@ gs::task::eggcarton(mesh::accessor<ro> m,
   auto f = m.mdspan<mesh::vertices>(fa);
   auto s = m.mdspan<mesh::vertices>(sa);
   auto Au = m.mdspan<mesh::vertices>(Aua);
-  const double sq_klpi = pow(PI, 2) * (pow(K, 2) + pow(L, 2));
+  const double sq_klpi = pow(M_PI, 2) * (pow(K, 2) + pow(L, 2));
 
   flog(info) << "dxdy: " << m.dxdy() << std::endl;
 
@@ -26,8 +25,8 @@ gs::task::eggcarton(mesh::accessor<ro> m,
     const double y = m.value<mesh::y_axis>(j);
     for(auto i : m.vertices<mesh::x_axis, mesh::logical>()) {
       const double x = m.value<mesh::x_axis>(i);
-      f[j][i] = sq_klpi * sin(K * PI * x) * sin(L * PI * y);
-      const double solution = sin(K * PI * x) * sin(L * PI * y);
+      f[j][i] = sq_klpi * sin(K * M_PI * x) * sin(L * M_PI * y);
+      const double solution = sin(K * M_PI * x) * sin(L * M_PI * y);
       s[j][i] = solution;
       Au[j][i] = 0.0;
       u[j][i] = 0.0;
