@@ -1,15 +1,16 @@
-# Problem initialization: eggcarton, enumerate (testing), constant (testing)
-problem: eggcarton
+# Problem initialization: eggcarton, enumerate (testing), constant (testing), verification
+problem: verification
 
 # Iteration, error, and output control
 max_iterations: 100
 error_tolerance: 1.0e-6
 log_frequency: 1
 
-# Vcycle control
-vcycle_direct: 1
-vcycle_pre: 5
-vcycle_post: 5
+# MG control
+mg_direct: 1
+mg_pre: 5
+mg_post: 5
+mg_cycles: 1
 
 # Geometry
 coords:

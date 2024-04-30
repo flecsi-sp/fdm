@@ -18,9 +18,10 @@ namespace param {
 inline double error_tolerance;
 inline std::size_t max_iterations;
 inline std::size_t fine_level;
-inline std::size_t vcycle_direct;
-inline std::size_t vcycle_pre;
-inline std::size_t vcycle_post;
+inline std::size_t mg_direct;
+inline std::size_t mg_pre;
+inline std::size_t mg_post;
+inline std::size_t mg_cycles;
 } // namespace param
 
 } // namespace gmg

@@ -10,15 +10,14 @@ task::diff_sum_square(mesh::accessor<ro> m,
   auto b = m.mdcolex<mesh::vertices>(ba);
 
   double sum{0};
-  //double d2 = m.xdelta() * m.ydelta();
-  double d2 = 1.0;
+  double d2 = m.xdelta() * m.ydelta();
   for(auto j : m.vertices<mesh::y_axis>()) {
     for(auto i : m.vertices<mesh::x_axis>()) {
-      sum += d2 * pow(a(i, j) - b(i, j), 2);
+      sum += pow(a(i, j) - b(i, j), 2);
     } // for
   } // for
 
-  return sum;
+  return d2 * sum;
 } // diff
 
 double
