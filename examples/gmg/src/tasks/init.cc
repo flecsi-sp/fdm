@@ -134,10 +134,12 @@ gmg::task::fourier_residual(mesh::accessor<ro> m,
   double kk,
   double ll) {
   auto u = m.mdcolex<mesh::vertices>(ua);
+  const auto dx = m.xdelta();
+  const auto dy = m.ydelta();
   double factor;
 
-  factor = 4 * (pow(sin(kk * M_PI * m.xdelta() * 0.5), 2) / pow(m.xdelta(), 2) +
-                pow(sin(ll * M_PI * m.ydelta() * 0.5), 2) / pow(m.ydelta(), 2));
+  factor = 4 * (pow(sin(kk * M_PI * dx * 0.5), 2) / pow(dx, 2) +
+                pow(sin(ll * M_PI * dy * 0.5), 2) / pow(dy, 2));
 
   forall(j, (m.vertices<mesh::y_axis, mesh::logical>()), "init_fourier_residual") {
     const double y = m.value<mesh::y_axis>(j);
@@ -181,3 +183,53 @@ gmg::task::gs_eigenvector(mesh::accessor<ro> m,
     } // for
   }; // forall
 } // gs_eigenvector
+
+void
+gmg::task::poisson_stencil(mesh::accessor<ro> m,
+  stencil_field<five_pt>::accessor<wo, na> soa) {
+  auto so = m.stencil_op<mesh::vertices, five_pt>(soa);
+
+  const double dx{m.xdelta()};
+  const double dy{m.ydelta()};
+  const double dx_over_dy{m.xdelta() / m.ydelta()};
+  const double dy_over_dx{m.ydelta() / m.xdelta()};
+  const double w{1.0 / m.dxdy()};
+
+  for(auto j : m.vertices<mesh::y_axis, mesh::logical>()) {
+    for(auto i : m.vertices<mesh::x_axis, mesh::logical>()) {
+      so(i, j, five_pt::c) = 2.0 * w * (dx_over_dy + dy_over_dx);
+      so(i, j, five_pt::w) = w * dy_over_dx;
+      so(i, j, five_pt::s) = w * dx_over_dy;
+    } // for
+  } // for
+} // poisson_stencil
+
+void
+gmg::task::turner_stencil(mesh::accessor<ro> m,
+  field<double>::accessor<ro, na> ud1,
+  field<double>::accessor<ro, na> ud2,
+  stencil_field<five_pt>::accessor<wo, na> soa,
+  double dt) {
+
+  auto u1 = m.mdcolex<mesh::vertices>(ud1);
+  auto u2 = m.mdcolex<mesh::vertices>(ud2);
+  auto so = m.stencil_op<mesh::vertices, five_pt>(soa);
+
+  const double dx{m.xdelta()};
+  const double dy{m.ydelta()};
+  const double dx_over_dy{m.xdelta() / m.ydelta()};
+  const double dy_over_dx{m.ydelta() / m.xdelta()};
+  const double w{dt / m.dxdy()};
+
+  // This is the stencil for the summer school
+  // The field "ua" has the coefficients for our variable stencil
+
+  for(auto j : m.vertices<mesh::y_axis, mesh::interior>()) {
+    for(auto i : m.vertices<mesh::x_axis, mesh::interior>()) {
+      so(i, j, five_pt::c) = 1 + w * (dy_over_dx * (u1(i + 1, j) + u1(i, j)) +
+                                      dx_over_dy * (u2(i, j + 1) + u2(i, j)));
+      so(i, j, five_pt::w) = w * dy_over_dx * u1(i, j);
+      so(i, j, five_pt::s) = w * dx_over_dy * u2(i, j);
+    } // for
+  } // for
+} // turner_stencil

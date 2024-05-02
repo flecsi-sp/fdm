@@ -39,20 +39,20 @@ task::diff_max(mesh::accessor<ro> m,
 
 void
 task::discrete_operator(mesh::accessor<ro> m,
+  stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<ro, ro> ua,
-  field<double>::accessor<rw, ro> Aua) {
+  field<double>::accessor<wo, ro> Aua) {
+  auto so = m.stencil_op<mesh::vertices, five_pt>(soa);
   auto u = m.mdcolex<mesh::vertices>(ua);
   auto Au = m.mdcolex<mesh::vertices>(Aua);
 
-  const double w = 1.0 / m.dxdy();
-  const auto dx_over_dy = m.xdelta() / m.ydelta();
-  const auto dy_over_dx = m.ydelta() / m.xdelta();
-
-  for(auto j : m.vertices<mesh::y_axis>()) {
+  forall(j, m.vertices<mesh::y_axis>(), "discrete_operator") {
     for(auto i : m.vertices<mesh::x_axis>()) {
-      Au(i, j) = w * (2.0 * (dx_over_dy + dy_over_dx) * u(i, j) -
-                       dy_over_dx * (u(i + 1, j) + u(i - 1, j)) -
-                       dx_over_dy * (u(i, j + 1) + u(i, j - 1)));
+      Au(i, j) = so(i, j, five_pt::c) * u(i, j) -
+                 so(i, j, five_pt::w) * u(i - 1, j) -
+                 so(i + 1, j, five_pt::w) * u(i + 1, j) -
+                 so(i, j, five_pt::s) * u(i, j - 1) -
+                 so(i, j + 1, five_pt::s) * u(i, j + 1);
     } // for
-  } // for
+  }; // forall
 } // discrete_operator

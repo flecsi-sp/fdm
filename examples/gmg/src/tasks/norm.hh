@@ -16,8 +16,9 @@ double diff_max(mesh::accessor<ro> m,
 double scale(mesh::accessor<ro> m, double sum);
 
 void discrete_operator(mesh::accessor<ro> m,
+  stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<ro, ro> ua,
-  field<double>::accessor<rw, ro> Aua);
+  field<double>::accessor<wo, ro> Aua);
 
 } // namespace gmg::task
 

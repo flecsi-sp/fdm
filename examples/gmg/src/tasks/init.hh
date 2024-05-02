@@ -48,6 +48,15 @@ void eggcarton(mesh::accessor<ro> m,
   field<double>::accessor<wo, na> sa,
   field<double>::accessor<wo, na> Aua);
 
+void poisson_stencil(mesh::accessor<ro> m,
+  stencil_field<five_pt>::accessor<wo, na> soa);
+
+void turner_stencil(mesh::accessor<ro> m,
+  field<double>::accessor<ro, na> ud1,
+  field<double>::accessor<ro, na> ud2,
+  stencil_field<five_pt>::accessor<wo, na> soa,
+  double dt);
+
 } // namespace gmg::task
 
 #endif // GMG_TASKS_INIT_HH

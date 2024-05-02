@@ -77,7 +77,7 @@ action::init(control_policy & cp) {
   flog(info) << ss.str() << std::endl;
 
   /*--------------------------------------------------------------------------*
-    Sovler parameters.
+    Solver parameters.
    *--------------------------------------------------------------------------*/
 
   param::mg_pre = config["mg_pre"].as<std::size_t>();
@@ -102,6 +102,7 @@ action::init(control_policy & cp) {
         execute<task::constant>(m, ed(m), 0.0);
         execute<task::io>(m, fd(m), "rhs");
         execute<task::io>(m, sd(m), "actual");
+        execute<task::poisson_stencil>(m, sod(m));
       }
       else {
         execute<task::constant>(m, ud(m), 0.0);
@@ -111,6 +112,7 @@ action::init(control_policy & cp) {
         execute<task::constant>(m, rd(m), 0.0);
         execute<task::constant>(m, ed(m), 0.0);
         execute<task::constant>(m, Aud(m), 0.0);
+        execute<task::poisson_stencil>(m, sod(m));
       } // if
     }
     else if(config["problem"].as<std::string>() == "enumerate") {
@@ -119,6 +121,7 @@ action::init(control_policy & cp) {
       execute<task::enumerate>(m, fd(m));
       execute<task::enumerate>(m, sd(m));
       execute<task::enumerate>(m, Aud(m));
+      execute<task::poisson_stencil>(m, sod(m));
     }
     else if(config["problem"].as<std::string>() == "bilinear") {
       execute<task::bilinear>(m, ud(m), 1.0, 1.0, 0.0);
@@ -128,6 +131,7 @@ action::init(control_policy & cp) {
       execute<task::bilinear>(m, rd(m), 1.0, 1.0, 0.0);
       execute<task::bilinear>(m, ed(m), 1.0, 1.0, 0.0);
       execute<task::bilinear>(m, Aud(m), 1.0, 1.0, 0.0);
+      execute<task::poisson_stencil>(m, sod(m));
     }
     else if(config["problem"].as<std::string>() == "constant") {
       execute<task::constant>(m, ud(m), util::level(index));
@@ -135,6 +139,7 @@ action::init(control_policy & cp) {
       execute<task::constant>(m, fd(m), util::level(index));
       execute<task::constant>(m, sd(m), util::level(index));
       execute<task::constant>(m, Aud(m), util::level(index));
+      execute<task::poisson_stencil>(m, sod(m));
     }
     else if(config["problem"].as<std::string>() == "verification") {
       execute<task::constant>(m, ud(m), 0.0);
@@ -144,6 +149,7 @@ action::init(control_policy & cp) {
       execute<task::constant>(m, sd(m), 0.0);
       execute<task::constant>(m, rd(m), 0.0);
       execute<task::constant>(m, Aud(m), 0.0);
+      execute<task::poisson_stencil>(m, sod(m));
     } // if
 
     vertices_x = std::pow(2, --x_levels) + 1;

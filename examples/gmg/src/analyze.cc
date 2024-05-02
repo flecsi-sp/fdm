@@ -35,7 +35,7 @@ action::analyze(control_policy &) {
   do {
     for(std::size_t i{0}; i < sub; ++i) {
       ud.flip();
-      execute<task::damped_jacobi>(m, ud(m), ud(m, 1), fd(m), omega);
+      execute<task::damped_jacobi>(m, sod(m), ud(m), ud(m, 1), fd(m), omega);
 
       // Multiply by eigenvalue
       execute<task::product_by_eigenvalue_jb>(m, sd(m), omega, k, k);
@@ -65,8 +65,8 @@ action::analyze(control_policy &) {
 
   do {
     for(std::size_t i{0}; i < sub; ++i) {
-      execute<task::red>(m, ud(m), fd(m));
-      execute<task::black>(m, ud(m), fd(m));
+      execute<task::red>(m, sod(m), ud(m), fd(m));
+      execute<task::black>(m, sod(m), ud(m), fd(m));
 
       // Multiply by eigenvalue
       execute<task::product_by_eigenvalue_gs>(m, sd(m), k, l);
@@ -129,7 +129,7 @@ action::analyze(control_policy &) {
   execute<task::fourier_residual>(m, sd(m), k, k);
 
   // Calculate residual
-  execute<task::residual>(m, ud(m), fd(m), rd(m));
+  execute<task::residual>(m, sod(m), ud(m), fd(m), rd(m));
 
   // Check solution
   err = norm::resl2();
