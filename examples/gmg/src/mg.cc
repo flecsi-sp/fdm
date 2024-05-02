@@ -16,7 +16,7 @@ gmg::vcycle(std::size_t level) {
     // FIXME "Solve"
     for(std::size_t i{0}; i < 1000; ++i) {
       ud.flip();
-      execute<task::damped_jacobi>(mf, ud(mf), ud(mf,1), fd(mf), 0.8);
+      execute<task::damped_jacobi>(mf, sod(mf), ud(mf), ud(mf,1), fd(mf), 0.8);
     } // for
   }
   else {
@@ -27,11 +27,11 @@ gmg::vcycle(std::size_t level) {
     // Pre Smoothing
     for(std::size_t i{0}; i < param::mg_pre; ++i) {
       ud.flip();
-      execute<task::damped_jacobi>(mf, ud(mf), ud(mf,1), fd(mf), 0.8);
+      execute<task::damped_jacobi>(mf, sod(mf), ud(mf), ud(mf,1), fd(mf), 0.8);
     } // for
 
     // Recursive solve
-    execute<task::residual>(mf, ud(mf), fd(mf), rd(mf));
+    execute<task::residual>(mf, sod(mf), ud(mf), fd(mf), rd(mf));
     execute<task::full_weighting>(mf, mc, rd(mf), fd(mc));
     execute<task::constant>(mc, ud(mc), 0.0);
 
@@ -43,7 +43,7 @@ gmg::vcycle(std::size_t level) {
     // Post Smoothing
     for(std::size_t i{0}; i < param::mg_post; ++i) {
       ud.flip();
-      execute<task::damped_jacobi>(mf, ud(mf), ud(mf,1), fd(mf), 0.8);
+      execute<task::damped_jacobi>(mf, sod(mf), ud(mf), ud(mf,1), fd(mf), 0.8);
     } // for
   } // if
 } // vcycle

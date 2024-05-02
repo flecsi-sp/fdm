@@ -265,6 +265,30 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
         return false;
       }
     } // is_boundary
+
+		template<class Sten, class MDColex>
+		struct stencil_operator {
+			constexpr double &
+			operator()(std::size_t i, std::size_t j, Sten dir) {
+				return so(i, j)[static_cast<std::ptrdiff_t>(dir)];
+			}
+
+			constexpr double
+			operator()(std::size_t i, std::size_t j, Sten dir) const {
+				return so(i, j)[static_cast<std::ptrdiff_t>(dir)];
+			}
+
+			MDColex so;
+		}; // stencil_operator
+
+		template<index_space S, class Sten, class T, flecsi::Privileges P>
+		auto stencil_op(
+			const flecsi::data::accessor<flecsi::data::dense, T, P> & a) const {
+			return stencil_operator<
+				Sten,
+				std::decay_t<decltype(this->template mdcolex<S>(a))>>{
+				this->template mdcolex<S>(a)};
+		} //stencil_op
   }; // struct interface
 
   static auto distribute(flecsi::Color nc, gcoord indices) {

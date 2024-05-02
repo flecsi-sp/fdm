@@ -31,23 +31,27 @@ void bilinear_interpolation(mesh::accessor<ro> mc,
   field<double>::accessor<rw, ro> efa);
 
 void damped_jacobi(mesh::accessor<ro> m,
+  stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<rw, ro> u_new,
   field<double>::accessor<ro, ro> u_old,
   field<double>::accessor<ro, ro> fa,
   double omega);
 
 void red(mesh::accessor<ro> m,
+  stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<rw, ro> ua,
   field<double>::accessor<ro, ro> fa);
 
 void black(mesh::accessor<ro> m,
+  stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<rw, ro> ua,
   field<double>::accessor<ro, ro> fa);
 
 void residual(mesh::accessor<ro> m,
+  stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<ro, ro> ua,
   field<double>::accessor<ro, ro> fa,
-  field<double>::accessor<rw, ro> ra);
+  field<double>::accessor<wo, ro> ra);
 
 void correction(mesh::accessor<ro> m,
   field<double>::accessor<rw, ro> ua,

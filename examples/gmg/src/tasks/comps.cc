@@ -60,24 +60,25 @@ task::bilinear_interpolation(mesh::accessor<ro> mc,
 
 void
 task::damped_jacobi(mesh::accessor<ro> m,
+  stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<rw, ro> ua_new,
   field<double>::accessor<ro, ro> ua_old,
   field<double>::accessor<ro, ro> fa,
   double omega) {
+  auto so = m.stencil_op<mesh::vertices, five_pt>(soa);
   auto u_new = m.mdcolex<mesh::vertices>(ua_new);
   auto u_old = m.mdcolex<mesh::vertices>(ua_old);
   auto f = m.mdcolex<mesh::vertices>(fa);
-  const auto dxdy = m.dxdy();
-  const auto dx_over_dy = m.xdelta() / m.ydelta();
-  const auto dy_over_dx = m.ydelta() / m.xdelta();
-  const auto factor = 1.0 / (2 * (dx_over_dy + dy_over_dx));
 
   forall(j, m.vertices<mesh::y_axis>(), "jacobi") {
     for(auto i : m.vertices<mesh::x_axis>()) {
       const double z =
-        factor *
-        (dxdy * f(i, j) + dy_over_dx * (u_old(i + 1, j) + u_old(i - 1, j)) +
-          dx_over_dy * (u_old(i, j + 1) + u_old(i, j - 1)));
+        (so(i, j, five_pt::w) * u_old(i - 1, j) +
+        so(i + 1, j, five_pt::w) * u_old(i + 1, j) +
+        so(i, j, five_pt::s) * u_old(i, j - 1) +
+        so(i, j + 1, five_pt::s) * u_old(i, j + 1) +
+        f(i, j)) / so(i, j, five_pt::c);
+
       u_new(i, j) = u_old(i, j) + omega * (z - u_old(i, j));
     } // for
   }; // forall
@@ -85,64 +86,66 @@ task::damped_jacobi(mesh::accessor<ro> m,
 
 void
 task::red(mesh::accessor<ro> m,
+  stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<rw, ro> ua,
   field<double>::accessor<ro, ro> fa) {
+  auto so = m.stencil_op<mesh::vertices, five_pt>(soa);
   auto u = m.mdcolex<mesh::vertices>(ua);
   auto f = m.mdcolex<mesh::vertices>(fa);
-  const auto dxdy = m.dxdy();
-  const auto dx_over_dy = m.xdelta() / m.ydelta();
-  const auto dy_over_dx = m.ydelta() / m.xdelta();
-  const auto factor = 1.0 / (2 * (dx_over_dy + dy_over_dx));
 
   forall(j, m.vertices<mesh::y_axis>(), "red") {
     for(auto i : m.red<mesh::x_axis>(j)) {
       u(i, j) =
-        factor * (dxdy * f(i, j) + dy_over_dx * (u(i + 1, j) + u(i - 1, j)) +
-                   dx_over_dy * (u(i, j + 1) + u(i, j - 1)));
+        (so(i, j, five_pt::w) * u(i - 1, j) +
+        so(i + 1, j, five_pt::w) * u(i + 1, j) +
+        so(i, j, five_pt::s) * u(i, j - 1) +
+        so(i, j + 1, five_pt::s) * u(i, j + 1) +
+        f(i, j)) / so(i, j, five_pt::c);
     } // for
   }; // forall
 } // red
 
 void
 task::black(mesh::accessor<ro> m,
+  stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<rw, ro> ua,
   field<double>::accessor<ro, ro> fa) {
+  auto so = m.stencil_op<mesh::vertices, five_pt>(soa);
   auto u = m.mdcolex<mesh::vertices>(ua);
   auto f = m.mdcolex<mesh::vertices>(fa);
-  const auto dxdy = m.dxdy();
-  const auto dx_over_dy = m.xdelta() / m.ydelta();
-  const auto dy_over_dx = m.ydelta() / m.xdelta();
-  const auto factor = 1.0 / (2 * (dx_over_dy + dy_over_dx));
 
   forall(j, m.vertices<mesh::y_axis>(), "black") {
     for(auto i : m.black<mesh::x_axis>(j)) {
       u(i, j) =
-        factor * (dxdy * f(i, j) + dy_over_dx * (u(i + 1, j) + u(i - 1, j)) +
-                   dx_over_dy * (u(i, j + 1) + u(i, j - 1)));
+        (so(i, j, five_pt::w) * u(i - 1, j) +
+        so(i + 1, j, five_pt::w) * u(i + 1, j) +
+        so(i, j, five_pt::s) * u(i, j - 1) +
+        so(i, j + 1, five_pt::s) * u(i, j + 1) +
+        f(i, j)) / so(i, j, five_pt::c);
     } // for
   }; // forall
 } // black
 
 void
 task::residual(mesh::accessor<ro> m,
+  stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<ro, ro> ua,
   field<double>::accessor<ro, ro> fa,
-  field<double>::accessor<rw, ro> ra) {
+  field<double>::accessor<wo, ro> ra) {
+  auto so = m.stencil_op<mesh::vertices, five_pt>(soa);
   auto u = m.mdcolex<mesh::vertices>(ua);
   auto f = m.mdcolex<mesh::vertices>(fa);
   auto r = m.mdcolex<mesh::vertices>(ra);
 
-  const double w = 1.0 / m.dxdy();
-  const auto dx_over_dy = m.xdelta() / m.ydelta();
-  const auto dy_over_dx = m.ydelta() / m.xdelta();
-
-  for(auto j : m.vertices<mesh::y_axis>()) {
+  forall(j, m.vertices<mesh::y_axis>(), "residual") {
     for(auto i : m.vertices<mesh::x_axis>()) {
-      r(i, j) = f(i, j) - w * (2.0 * (dx_over_dy + dy_over_dx) * u(i, j) -
-                                dy_over_dx * (u(i + 1, j) + u(i - 1, j)) -
-                                dx_over_dy * (u(i, j - 1) + u(i, j + 1)));
+      r(i, j) = f(i, j) - (so(i, j, five_pt::c) * u(i, j) -
+                           so(i, j, five_pt::w) * u(i - 1, j) -
+                           so(i + 1, j, five_pt::w) * u(i + 1, j) -
+                           so(i, j, five_pt::s) * u(i, j - 1) -
+                           so(i, j + 1, five_pt::s) * u(i, j + 1));
     } // for
-  } // for
+  }; // forall
 } // residual
 
 void

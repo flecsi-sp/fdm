@@ -29,7 +29,7 @@ action::solve(control_policy &) {
   do {
     for(std::size_t i{0}; i < sub; ++i) {
       ud.flip();
-      execute<task::damped_jacobi>(m, ud(m), ud(m,1), fd(m), 0.8);
+      execute<task::damped_jacobi>(m, sod(m), ud(m), ud(m,1), fd(m), 0.8);
     } // for
     ita += sub;
 
@@ -49,8 +49,8 @@ action::solve(control_policy &) {
 
   do {
     for(std::size_t i{0}; i < sub; ++i) {
-      execute<task::red>(m, ud(m), fd(m));
-      execute<task::black>(m, ud(m), fd(m));
+      execute<task::red>(m, sod(m), ud(m), fd(m));
+      execute<task::black>(m, sod(m), ud(m), fd(m));
     } // for
     ita += sub;
 
@@ -66,7 +66,7 @@ action::solve(control_policy &) {
 #if 0 // Grid Transfer
   auto & mf = *mh[0].get();
   auto & mc = *mh[1].get();
-  execute<task::residual>(mf, ud(mf), fd(mf), rd(mf));
+  execute<task::residual>(mf, sod(mf), ud(mf), fd(mf), rd(mf));
   execute<task::print>(mf, ud(mf));
   execute<task::full_weighting>(mf, mc, rd(mf), fd(mc));
   execute<task::io>(mc, fd(mc), "fw");
@@ -86,10 +86,10 @@ action::solve(control_policy &) {
     // Pre Smoothing
     for(std::size_t i{0}; i < pre; ++i) {
       ud.flip();
-      execute<task::damped_jacobi>(mf, ud(mf), ud(mf,1), fd(mf), 0.8);
+      execute<task::damped_jacobi>(mf, sod(mf), ud(mf), ud(mf,1), fd(mf), 0.8);
     } // for
 
-    execute<task::residual>(mf, ud(mf), fd(mf), rd(mf));
+    execute<task::residual>(mf, sod(mf), ud(mf), fd(mf), rd(mf));
     execute<task::full_weighting>(mf, mc, rd(mf), fd(mc));
     execute<task::constant>(mc, ud(mc), 0.0);
     execute<task::constant>(mc, ud(mc,1), 0.0);
@@ -97,7 +97,7 @@ action::solve(control_policy &) {
     // "Solve" on coarse grid
     for(std::size_t i{0}; i < 500; ++i) {
       ud.flip();
-      execute<task::damped_jacobi>(mc, ud(mc), ud(mc,1), fd(mc), 0.8);
+      execute<task::damped_jacobi>(mc, sod(mc), ud(mc), ud(mc,1), fd(mc), 0.8);
     } // for
 
     execute<task::bilinear_interpolation>(mc, mf, ud(mc), ed(mf));
@@ -106,7 +106,7 @@ action::solve(control_policy &) {
     // Post Smoothing
     for(std::size_t i{0}; i < post; ++i) {
       ud.flip();
-      execute<task::damped_jacobi>(mf, ud(mf), ud(mf,1), fd(mf), 0.8);
+      execute<task::damped_jacobi>(mf, sod(mf), ud(mf), ud(mf,1), fd(mf), 0.8);
     } // for
 
     err = norm::l2();
