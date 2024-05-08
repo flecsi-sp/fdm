@@ -18,18 +18,16 @@ inline flecsi::program_option<std::size_t> x_levels("x-levels",
   "The x levels of the mesh hierarchy.",
   1,
   [](std::size_t v, std::stringstream & ss) {
-    return v > 2
-             ? true
-             : (ss << "extents must be greater than 4" << v) && false;
+    return v > 2 ? true
+                 : (ss << "extents must be greater than 4" << v) && false;
   });
 
 inline flecsi::program_option<std::size_t> y_levels("y-levels",
   "The y levels of the mesh hierarchy.",
   1,
   [](std::size_t v, std::stringstream & ss) {
-    return v > 2
-             ? true
-             : (ss << "extents must be greater than 4" << v) && false;
+    return v > 2 ? true
+                 : (ss << "extents must be greater than 4" << v) && false;
   });
 
 inline flecsi::program_option<int> colors("MUSCL Options",

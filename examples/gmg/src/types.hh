@@ -14,10 +14,11 @@ template<typename T, flecsi::data::layout L = flecsi::data::layout::dense>
 using field = flecsi::field<T, L>;
 
 // Define the five point stencil
-enum class five_pt {c, w, s, ndirs};
+enum class five_pt { c, w, s, ndirs };
 
 template<class Sten>
-using stencil_field = field<std::array<double, static_cast<std::size_t>(Sten::ndirs)>>;
+using stencil_field =
+  field<std::array<double, static_cast<std::size_t>(Sten::ndirs)>>;
 
 inline stencil_field<five_pt>::definition<mesh, mesh::vertices> sod;
 

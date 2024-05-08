@@ -1,13 +1,13 @@
 #include "analyze.hh"
-#include "norm.hh"
-#include "tasks/comps.hh"
-#include "tasks/analyze.hh"
-#include "tasks/init.hh"
 #include "mg.hh"
+#include "norm.hh"
 #include "state.hh"
+#include "tasks/analyze.hh"
+#include "tasks/comps.hh"
+#include "tasks/init.hh"
 
-#include <limits>
 #include <algorithm>
+#include <limits>
 
 using namespace gmg;
 using namespace flecsi;
@@ -75,7 +75,9 @@ action::analyze(control_policy &) {
       err = norm::l2();
       difference = abs(prediction - err) / prediction;
 
-      flog(info) << "Gauss-Seidel iteration, prediction, error, difference: " << i + ita << ' ' << prediction << ' ' << err << ' ' << difference << std::endl;
+      flog(info) << "Gauss-Seidel iteration, prediction, error, difference: "
+                 << i + ita << ' ' << prediction << ' ' << err << ' '
+                 << difference << std::endl;
     } // for
     ita += sub;
 

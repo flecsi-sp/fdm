@@ -38,7 +38,8 @@ task::product_by_eigenvalue_gs(mesh::accessor<ro> m,
   const auto factor = 1.0 / (dx_over_dy + dy_over_dx);
   const auto cos_k = cos(kk * M_PI * dx);
   const auto cos_l = cos(ll * M_PI * dy);
-  const auto lambda = pow(factor * (dy_over_dx * cos_k + dx_over_dy * cos_l), 2);
+  const auto lambda =
+    pow(factor * (dy_over_dx * cos_k + dx_over_dy * cos_l), 2);
 
   forall(j, (m.vertices<mesh::y_axis>()), "product_by_eigenvalue_gs") {
     for(auto i : m.vertices<mesh::x_axis>()) {
