@@ -16,7 +16,7 @@ gmg::vcycle(std::size_t level) {
     // FIXME "Solve"
     for(std::size_t i{0}; i < 1000; ++i) {
       ud.flip();
-      execute<task::damped_jacobi>(mf, sod(mf), ud(mf), ud(mf,1), fd(mf), 0.8);
+      execute<task::damped_jacobi>(mf, sod(mf), ud(mf), ud(mf, 1), fd(mf), 0.8);
     } // for
   }
   else {
@@ -27,7 +27,7 @@ gmg::vcycle(std::size_t level) {
     // Pre Smoothing
     for(std::size_t i{0}; i < param::mg_pre; ++i) {
       ud.flip();
-      execute<task::damped_jacobi>(mf, sod(mf), ud(mf), ud(mf,1), fd(mf), 0.8);
+      execute<task::damped_jacobi>(mf, sod(mf), ud(mf), ud(mf, 1), fd(mf), 0.8);
     } // for
 
     // Recursive solve
@@ -43,7 +43,7 @@ gmg::vcycle(std::size_t level) {
     // Post Smoothing
     for(std::size_t i{0}; i < param::mg_post; ++i) {
       ud.flip();
-      execute<task::damped_jacobi>(mf, sod(mf), ud(mf), ud(mf,1), fd(mf), 0.8);
+      execute<task::damped_jacobi>(mf, sod(mf), ud(mf), ud(mf, 1), fd(mf), 0.8);
     } // for
   } // if
 } // vcycle
@@ -54,13 +54,13 @@ gmg::fmg(std::size_t level) {
 
   // The scheme requires:
   // 1) Go to a coarser grid, adapt all and repeat this step
-  // 2) If in the deeper level, direct solve or do a V-Cycle for a number of iterations
-  // 3) Come back up, interpolate, and do a V-Cycle
+  // 2) If in the deeper level, direct solve or do a V-Cycle for a number of
+  // iterations 3) Come back up, interpolate, and do a V-Cycle
 
   // Deepest level
   if(level == param::mg_direct) {
-    flog(warn) << "Deepest level(index):" << level << "("
-               << util::index(level) << ")" << std::endl;
+    flog(warn) << "Deepest level(index):" << level << "(" << util::index(level)
+               << ")" << std::endl;
 
     // If in the deepest level, the V-Cycle is already doing a direct solve
     gmg::vcycle(level);

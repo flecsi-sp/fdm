@@ -118,7 +118,8 @@ gmg::task::fourier_interp(mesh::accessor<ro> m,
   cos2j = pow(cos(ll * M_PI * m.ydelta() * 0.5), 2);
   sin2j = pow(sin(ll * M_PI * m.ydelta() * 0.5), 2);
 
-  forall(j, (m.vertices<mesh::y_axis, mesh::logical>()), "init_fourier_interp") {
+  forall(
+    j, (m.vertices<mesh::y_axis, mesh::logical>()), "init_fourier_interp") {
     const double y = m.value<mesh::y_axis>(j);
     for(auto i : m.vertices<mesh::x_axis, mesh::logical>()) {
       const double x = m.value<mesh::x_axis>(i);
@@ -139,9 +140,10 @@ gmg::task::fourier_residual(mesh::accessor<ro> m,
   double factor;
 
   factor = 4 * (pow(sin(kk * M_PI * dx * 0.5), 2) / pow(dx, 2) +
-                pow(sin(ll * M_PI * dy * 0.5), 2) / pow(dy, 2));
+                 pow(sin(ll * M_PI * dy * 0.5), 2) / pow(dy, 2));
 
-  forall(j, (m.vertices<mesh::y_axis, mesh::logical>()), "init_fourier_residual") {
+  forall(
+    j, (m.vertices<mesh::y_axis, mesh::logical>()), "init_fourier_residual") {
     const double y = m.value<mesh::y_axis>(j);
     for(auto i : m.vertices<mesh::x_axis, mesh::logical>()) {
       const double x = m.value<mesh::x_axis>(i);
@@ -174,7 +176,8 @@ gmg::task::gs_eigenvector(mesh::accessor<ro> m,
   cos_f = factor * (cos2i + cos2j);
   sin_f = factor * (sin2i + sin2j);
 
-  forall(j, (m.vertices<mesh::y_axis, mesh::logical>()), "init_gs_eigenvector") {
+  forall(
+    j, (m.vertices<mesh::y_axis, mesh::logical>()), "init_gs_eigenvector") {
     const double y = m.value<mesh::y_axis>(j);
     for(auto i : m.vertices<mesh::x_axis, mesh::logical>()) {
       const double x = m.value<mesh::x_axis>(i);
@@ -227,7 +230,7 @@ gmg::task::turner_stencil(mesh::accessor<ro> m,
   for(auto j : m.vertices<mesh::y_axis, mesh::interior>()) {
     for(auto i : m.vertices<mesh::x_axis, mesh::interior>()) {
       so(i, j, five_pt::c) = 1 + w * (dy_over_dx * (u1(i + 1, j) + u1(i, j)) +
-                                      dx_over_dy * (u2(i, j + 1) + u2(i, j)));
+                                       dx_over_dy * (u2(i, j + 1) + u2(i, j)));
       so(i, j, five_pt::w) = w * dy_over_dx * u1(i, j);
       so(i, j, five_pt::s) = w * dx_over_dy * u2(i, j);
     } // for

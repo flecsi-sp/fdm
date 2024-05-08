@@ -72,12 +72,11 @@ task::damped_jacobi(mesh::accessor<ro> m,
 
   forall(j, m.vertices<mesh::y_axis>(), "jacobi") {
     for(auto i : m.vertices<mesh::x_axis>()) {
-      const double z =
-        (so(i, j, five_pt::w) * u_old(i - 1, j) +
-        so(i + 1, j, five_pt::w) * u_old(i + 1, j) +
-        so(i, j, five_pt::s) * u_old(i, j - 1) +
-        so(i, j + 1, five_pt::s) * u_old(i, j + 1) +
-        f(i, j)) / so(i, j, five_pt::c);
+      const double z = (so(i, j, five_pt::w) * u_old(i - 1, j) +
+                         so(i + 1, j, five_pt::w) * u_old(i + 1, j) +
+                         so(i, j, five_pt::s) * u_old(i, j - 1) +
+                         so(i, j + 1, five_pt::s) * u_old(i, j + 1) + f(i, j)) /
+                       so(i, j, five_pt::c);
 
       u_new(i, j) = u_old(i, j) + omega * (z - u_old(i, j));
     } // for
@@ -95,12 +94,11 @@ task::red(mesh::accessor<ro> m,
 
   forall(j, m.vertices<mesh::y_axis>(), "red") {
     for(auto i : m.red<mesh::x_axis>(j)) {
-      u(i, j) =
-        (so(i, j, five_pt::w) * u(i - 1, j) +
-        so(i + 1, j, five_pt::w) * u(i + 1, j) +
-        so(i, j, five_pt::s) * u(i, j - 1) +
-        so(i, j + 1, five_pt::s) * u(i, j + 1) +
-        f(i, j)) / so(i, j, five_pt::c);
+      u(i, j) = (so(i, j, five_pt::w) * u(i - 1, j) +
+                  so(i + 1, j, five_pt::w) * u(i + 1, j) +
+                  so(i, j, five_pt::s) * u(i, j - 1) +
+                  so(i, j + 1, five_pt::s) * u(i, j + 1) + f(i, j)) /
+                so(i, j, five_pt::c);
     } // for
   }; // forall
 } // red
@@ -116,12 +114,11 @@ task::black(mesh::accessor<ro> m,
 
   forall(j, m.vertices<mesh::y_axis>(), "black") {
     for(auto i : m.black<mesh::x_axis>(j)) {
-      u(i, j) =
-        (so(i, j, five_pt::w) * u(i - 1, j) +
-        so(i + 1, j, five_pt::w) * u(i + 1, j) +
-        so(i, j, five_pt::s) * u(i, j - 1) +
-        so(i, j + 1, five_pt::s) * u(i, j + 1) +
-        f(i, j)) / so(i, j, five_pt::c);
+      u(i, j) = (so(i, j, five_pt::w) * u(i - 1, j) +
+                  so(i + 1, j, five_pt::w) * u(i + 1, j) +
+                  so(i, j, five_pt::s) * u(i, j - 1) +
+                  so(i, j + 1, five_pt::s) * u(i, j + 1) + f(i, j)) /
+                so(i, j, five_pt::c);
     } // for
   }; // forall
 } // black
@@ -140,10 +137,10 @@ task::residual(mesh::accessor<ro> m,
   forall(j, m.vertices<mesh::y_axis>(), "residual") {
     for(auto i : m.vertices<mesh::x_axis>()) {
       r(i, j) = f(i, j) - (so(i, j, five_pt::c) * u(i, j) -
-                           so(i, j, five_pt::w) * u(i - 1, j) -
-                           so(i + 1, j, five_pt::w) * u(i + 1, j) -
-                           so(i, j, five_pt::s) * u(i, j - 1) -
-                           so(i, j + 1, five_pt::s) * u(i, j + 1));
+                            so(i, j, five_pt::w) * u(i - 1, j) -
+                            so(i + 1, j, five_pt::w) * u(i + 1, j) -
+                            so(i, j, five_pt::s) * u(i, j - 1) -
+                            so(i, j + 1, five_pt::s) * u(i, j + 1));
     } // for
   }; // forall
 } // residual

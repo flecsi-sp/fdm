@@ -10,8 +10,11 @@ void enumerate(mesh::accessor<ro> m, field<double>::accessor<wo, na> fa);
 /*!
   Initialize a field using a general plane equation, i.e., z = D + Mx + Ny.
  */
-void bilinear(mesh::accessor<ro> m, field<double>::accessor<wo, na> fa,
-    double M, double N, double D);
+void bilinear(mesh::accessor<ro> m,
+  field<double>::accessor<wo, na> fa,
+  double M,
+  double N,
+  double D);
 
 void constant(mesh::accessor<ro> m,
   field<double>::accessor<wo, na> fa,
