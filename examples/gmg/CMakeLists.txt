@@ -31,3 +31,11 @@ target_link_libraries(gmg FleCSI::FleCSI
   FleCSI-SP-FDM::FleCSI-SP-FDM
   yaml-cpp
 )
+
+#------------------------------------------------------------------------------#
+# Unit tests.
+#------------------------------------------------------------------------------#
+#fdm_add_unit(mytest
+#  SOURCES
+#    mytest.cc
+#)

@@ -128,6 +128,7 @@ if(PROJECT_IS_TOP_LEVEL)
   #----------------------------------------------------------------------------#
 
   option(ENABLE_UNIT_TESTS "Enable unit testing" OFF)
+  mark_as_advanced(ENABLE_UNIT_TESTS)
   if(ENABLE_UNIT_TESTS)
     include(FleCSI/unit)
     flecsi_enable_testing()
