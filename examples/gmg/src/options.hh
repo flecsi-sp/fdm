@@ -1,3 +1,7 @@
+/*----------------------------------------------------------------------------*
+  Copyright (C) 2023, Triad National Security, LLC
+  All rights reserved.
+ *----------------------------------------------------------------------------*/
 #ifndef GMG_OPTIONS_HH
 #define GMG_OPTIONS_HH
 

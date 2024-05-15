@@ -1,3 +1,7 @@
+/*----------------------------------------------------------------------------*
+  Copyright (C) 2023, Triad National Security, LLC
+  All rights reserved.
+ *----------------------------------------------------------------------------*/
 #ifndef GS_TASKS_INIT_HH
 #define GS_TASKS_INIT_HH
 
