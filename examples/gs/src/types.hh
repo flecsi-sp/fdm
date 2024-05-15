@@ -1,7 +1,7 @@
 #ifndef GS_TYPES_HH
 #define GS_TYPES_HH
 
-#include "fdm/mesh.hh"
+#include "spec/mesh.hh"
 
 #include <flecsi/data.hh>
 

@@ -1,7 +1,7 @@
 #ifndef GMG_TYPES_HH
 #define GMG_TYPES_HH
 
-#include <fdm/mesh.hh>
+#include <spec/mesh.hh>
 
 namespace gmg {
 

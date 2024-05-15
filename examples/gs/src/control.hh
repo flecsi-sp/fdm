@@ -1,7 +1,7 @@
 #ifndef GS_CONTROL_HH
 #define GS_CONTROL_HH
 
-#include "fdm/mesh.hh"
+#include "spec/mesh.hh"
 
 #include <flecsi/flog.hh>
 #include <flecsi/run/control.hh>

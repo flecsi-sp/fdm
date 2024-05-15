@@ -45,12 +45,6 @@ endfunction()
 if(PROJECT_IS_TOP_LEVEL)
 
   #----------------------------------------------------------------------------#
-  # Add local module path.
-  #----------------------------------------------------------------------------#
-
-  list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
-
-  #----------------------------------------------------------------------------#
   # Find the FleCSI package. This must be done early so that the FleCSI cmake
   # packages will be available to the project, e.g., 'include(FleCSI/format)'.
   #
@@ -132,7 +126,7 @@ if(PROJECT_IS_TOP_LEVEL)
   if(ENABLE_UNIT_TESTS)
     include(FleCSI/unit)
     flecsi_enable_testing()
-    add_subdirectory(fdm)
+    add_subdirectory(spec)
   endif()
 endif()
 
