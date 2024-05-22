@@ -1,3 +1,5 @@
+![logo](doc/sphinx/_static/flecsi-sp-white.png)
+
 # Simple Cartesian Mesh
 
 # Build
