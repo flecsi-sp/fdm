@@ -1,6 +1,6 @@
 ![logo](doc/sphinx/_static/flecsi-sp-white.png)
 
-# Simple Cartesian Mesh
+# Finite Difference Method (FDM) Mesh
 
 # Build
 
