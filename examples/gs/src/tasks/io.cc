@@ -1,5 +1,6 @@
 #include "io.hh"
 
+#include <fstream>
 #include <sstream>
 
 using namespace flecsi;
@@ -19,7 +20,7 @@ gs::task::io(mesh::accessor<ro> m,
     ss << "-" << process() << ".dat";
   } // if
 
-  std::ofstream solution(ss.str(), std::ofstream::out);
+  std::ofstream solution(ss.str(), std::ios::out);
 
   for(auto j : m.vertices<mesh::y_axis, mesh::logical>()) {
     const double y = m.value<mesh::y_axis>(j);

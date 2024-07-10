@@ -30,17 +30,11 @@ stride_view(R && r,
   using I = std::make_unsigned_t<decltype(n)>;
   I b{0};
   const I sz = ceil_div<I>(std::size(r) - o, n); // before moving
-  return std::ranges::transform_view(std::ranges::iota_view{b, sz},
+  return flecsi::util::transform_view(flecsi::util::iota_view{b, sz},
     [r = std::forward<R>(r), n, o](
       I i) -> decltype(auto) { return r[i * n + o]; });
 } // stride_view
 
-template<auto S, typename T>
-auto
-make_ids(T && t) {
-  return std::ranges::transform_view(
-    std::forward<T>(t), [](auto const & i) { return flecsi::topo::id<S>(i); });
-} // make_ids
 } // namespace util
 
 /*!
@@ -186,11 +180,12 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
       } // if
 
       if constexpr(R) {
-        return util::make_ids<mesh::vertices>(
+        return flecsi::topo::make_ids<mesh::vertices>(
           std::ranges::iota_view{b, e} | std::views::reverse);
       }
       else {
-        return util::make_ids<mesh::vertices>(std::ranges::iota_view{b, e});
+        return flecsi::topo::make_ids<mesh::vertices>(
+          flecsi::util::iota_view{b, e});
       }
     } // vertices
 
