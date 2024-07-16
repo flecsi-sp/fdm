@@ -8,7 +8,7 @@ using namespace flecsi;
 
 void
 gmg::vcycle(std::size_t level) {
-  auto & mf = *mh[util::index(level)];
+  auto & mf = mh[util::index(level)];
 
   if(level == param::mg_direct) {
     flog(warn) << "Direct solve level(index): " << level << "("
@@ -22,7 +22,7 @@ gmg::vcycle(std::size_t level) {
   else {
     flog(warn) << "Cycle level(index): " << level << "(" << util::index(level)
                << ")" << std::endl;
-    auto & mc = *mh[util::index(level - 1)];
+    auto & mc = mh[util::index(level - 1)];
 
     // Pre Smoothing
     for(std::size_t i{0}; i < param::mg_pre; ++i) {
@@ -50,7 +50,7 @@ gmg::vcycle(std::size_t level) {
 
 void
 gmg::fmg(std::size_t level) {
-  auto & mf = *mh[util::index(level)];
+  auto & mf = mh[util::index(level)];
 
   // The scheme requires:
   // 1) Go to a coarser grid, adapt all and repeat this step
@@ -68,7 +68,7 @@ gmg::fmg(std::size_t level) {
   else {
     flog(warn) << "Cycle level(index): " << level << "(" << util::index(level)
                << ")" << std::endl;
-    auto & mc = *mh[util::index(level - 1)];
+    auto & mc = mh[util::index(level - 1)];
 
     // Set the RHS and solution field
     execute<task::full_weighting>(mf, mc, fd(mf), fd(mc));

@@ -6,6 +6,6 @@ using namespace flecsi;
 
 void
 gmg::action::finalize(control_policy & cp) {
-  auto & m = *mh[0].get();
+  auto & m = mh[0];
   execute<task::io, mpi>(m, ud(m), "solver");
 } // finalize

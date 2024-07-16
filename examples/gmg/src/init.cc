@@ -91,7 +91,7 @@ action::init(control_policy & cp) {
   int index{0};
   do {
     mesh::gcoord axis_extents{vertices_x, vertices_y};
-    auto & m = *mh.emplace_back(std::make_unique<mesh::slot>());
+    auto & m = mh.emplace_back();
     m.allocate(mesh::mpi_coloring{parts, axis_extents}, geom);
 
     if(config["problem"].as<std::string>() == "eggcarton") {

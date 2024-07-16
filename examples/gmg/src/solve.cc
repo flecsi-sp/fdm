@@ -23,7 +23,7 @@ action::solve(control_policy &) {
 #if 0 // Jacobi
   std::size_t sub{100 > param::max_iterations ? param::max_iterations : 100};
 
-  auto & m = *mh[0].get();
+  auto & m = mh[0];
   execute<task::constant>(m, ud(m), 0.0);
 
   do {
@@ -45,7 +45,7 @@ action::solve(control_policy &) {
 #if 0 // Red-Black Gauss Seidel
   std::size_t sub{100 > param::max_iterations ? param::max_iterations : 100};
 
-  auto & m = *mh[0].get();
+  auto & m = mh[0];
 
   do {
     for(std::size_t i{0}; i < sub; ++i) {
@@ -64,8 +64,8 @@ action::solve(control_policy &) {
 #endif
 
 #if 0 // Grid Transfer
-  auto & mf = *mh[0].get();
-  auto & mc = *mh[1].get();
+  auto & mf = mh[0];
+  auto & mc = mh[1];
   execute<task::residual>(mf, sod(mf), ud(mf), fd(mf), rd(mf));
   execute<task::print>(mf, ud(mf));
   execute<task::full_weighting>(mf, mc, rd(mf), fd(mc));
@@ -78,8 +78,8 @@ action::solve(control_policy &) {
   std::size_t pre{5};
   std::size_t post{5};
 
-  auto & mf = *mh[0].get();
-  auto & mc = *mh[1].get();
+  auto & mf = mh[0];
+  auto & mc = mh[1];
   execute<task::constant>(mf, ud(mf), 0.0);
 
   do {
