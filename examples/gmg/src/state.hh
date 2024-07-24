@@ -9,7 +9,7 @@
 
 namespace gmg {
 
-inline std::vector<std::unique_ptr<mesh::slot>> mh;
+inline std::vector<mesh::slot> mh;
 
 inline dual_field<double> ud;
 inline const field<double>::definition<mesh, mesh::vertices> fd;

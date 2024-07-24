@@ -22,7 +22,7 @@ action::analyze(control_policy &) {
 #if 0 // Test Jacobi
   std::size_t sub{100 > param::max_iterations ? param::max_iterations : 100};
 
-  auto & m = *mh[0].get();
+  auto & m = mh[0];
   double k = 2.0;
   double omega = 0.95;
 
@@ -54,7 +54,7 @@ action::analyze(control_policy &) {
 #if 1 // Test Red-Black Gauss-Seidel
   std::size_t sub{100 > param::max_iterations ? param::max_iterations : 100};
 
-  auto & m = *mh[0].get();
+  auto & m = mh[0];
   double k = 1.0, l = 1.0;
 
   // Set field with a single mode
@@ -86,8 +86,8 @@ action::analyze(control_policy &) {
 
 #if 0 // Test full weighting
 
-  auto & mf = *mh[0].get();
-  auto & mc = *mh[1].get();
+  auto & mf = mh[0];
+  auto & mc = mh[1];
   double k = 2.0;
 
   // Set field with a single mode
@@ -104,8 +104,8 @@ action::analyze(control_policy &) {
 
 #if 0 // Test interpolation
 
-  auto & mf = *mh[0].get();
-  auto & mc = *mh[1].get();
+  auto & mf = mh[0];
+  auto & mc = mh[1];
   double k = 2.0;
 
   // Set field with a single mode
@@ -121,7 +121,7 @@ action::analyze(control_policy &) {
 #endif
 
 #if 0 // Test residual
-  auto & m = *mh[0].get();
+  auto & m = mh[0];
   double k = 1.0;
 
   // Set field with a single mode
@@ -140,7 +140,7 @@ action::analyze(control_policy &) {
 
 #if 0 // Test FMG
 
-  auto & m = *mh[0].get();
+  auto & m = mh[0];
 
   // Set the eggcarton problem
   execute<task::eggcarton>(m, ud(m), fd(m), sd(m), Aud(m));

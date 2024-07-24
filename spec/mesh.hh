@@ -110,39 +110,45 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
   template<class B>
   struct interface : B {
 
+    template<mesh::axis A>
+      FLECSI_INLINE_TARGET base::axis_info axis() const {
+        return B::template axis<mesh::vertices, A>();
+      }
+
     /// Return the size for the given axis and domain.
     /// @tparam A  The mesh axis.
     /// @tparam DM The mesh domain.
-    template<axis A, domain DM = interior>
+    template<mesh::axis A, domain DM = interior>
     std::size_t size() {
+      const base::axis_info a = axis<A>();
       if constexpr(DM == interior) {
         const bool low = B::template is_low<mesh::vertices, A>();
         const bool high = B::template is_high<mesh::vertices, A>();
 
         if(low && high) { /* degenerate */
-          return size<A, logical>() - 2;
+          return a.logical - 2;
         }
         else if(low || high) {
-          return size<A, logical>() - 1;
+          return a.logical - 1;
         }
         else { /* interior */
-          return size<A, logical>();
+          return a.logical;
         }
       }
       else if constexpr(DM == logical) {
-        return B::template size<mesh::vertices, A, base::domain::logical>();
+        return a.logical;
       }
       else if constexpr(DM == all) {
-        return B::template size<mesh::vertices, A, base::domain::all>();
+        a.layout.extent();
       }
       else if constexpr(DM == global) {
-        return B::template size<mesh::vertices, A, base::domain::global>();
+        return a.axis.extent;
       }
     } // size
 
-    template<axis A>
+    template<mesh::axis A>
     FLECSI_INLINE_TARGET std::size_t global_id(std::size_t i) const {
-      return B::template global_id<mesh::vertices, A>(i);
+      return axis<A>().global_id(i);
     } // global_id
 
     /// Return a range over the given axis and domain.
@@ -158,22 +164,23 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
     ///     } // for
     ///   } // for
     /// @endcode
-    template<axis A, domain DM = interior, bool R = false>
+    template<mesh::axis A, domain DM = interior, bool R = false>
     FLECSI_INLINE_TARGET auto vertices() const {
+      base::axis_info const a = axis<A>();
       flecsi::util::id b, e;
 
       if constexpr(DM == interior) {
         // The outermost layer is either halo or fixed boundaries:
         b = 1;
-        e = B::template size<mesh::vertices, A, base::domain::all>() - 1;
+        e = a.layout.extent() - 1;
       }
       else if constexpr(DM == logical) {
-        b = B::template offset<mesh::vertices, A, base::domain::logical>();
-        e = b + B::template size<mesh::vertices, A, base::domain::logical>();
+        b = a.offset;
+        e = a.logical;
       }
       else if constexpr(DM == all) {
         b = 0;
-        e = B::template size<mesh::vertices, A, mesh::domain::all>();
+        e = a.layout.extent();
       }
       else if(DM == global) {
         flog_fatal("illegal domain: you cannot iterate over the global domain");
@@ -189,7 +196,7 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
       }
     } // vertices
 
-    template<axis A>
+    template<mesh::axis A>
     FLECSI_INLINE_TARGET auto red(std::size_t row) const {
       // The checkerboard extends across colors.  The (boundary) point with
       // global ID (0,0) is red; row is local, and 0 in the space of the
@@ -200,7 +207,7 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
           2);
     }
 
-    template<axis A>
+    template<mesh::axis A>
     FLECSI_INLINE_TARGET auto black(std::size_t row) const {
       return red<A>(row + 1);
     }
@@ -221,12 +228,12 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
       return xdelta() * ydelta();
     }
 
-    template<axis A>
+    template<mesh::axis A>
     FLECSI_INLINE_TARGET double value(std::size_t i) const {
       return (A == x_axis ? xdelta() : ydelta()) * global_id<A>(i);
     }
 
-    template<axis A, boundary BD>
+    template<mesh::axis A, boundary BD>
     bool is_boundary(std::size_t i) {
 
       auto const loff =
