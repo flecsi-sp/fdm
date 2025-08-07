@@ -9,20 +9,23 @@
 
 namespace gmg::task {
 
-double diff_sum_square(mesh::accessor<ro> m,
+double diff_sum_square(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<ro, ro> aa,
-  field<double>::accessor<ro, ro> ba);
+  field<double>::accessor<ro, ro> ba) noexcept;
 
-double diff_max(mesh::accessor<ro> m,
+double diff_max(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<ro, ro> aa,
-  field<double>::accessor<ro, ro> ba);
+  field<double>::accessor<ro, ro> ba) noexcept;
 
-double scale(mesh::accessor<ro> m, double sum);
+double scale(flecsi::exec::cpu, mesh::accessor<ro> m, double sum) noexcept;
 
-void discrete_operator(mesh::accessor<ro> m,
+void discrete_operator(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<ro, ro> ua,
-  field<double>::accessor<wo, ro> Aua);
+  field<double>::accessor<wo, ro> Aua) noexcept;
 
 } // namespace gmg::task
 

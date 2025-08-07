@@ -9,60 +9,72 @@
 
 namespace gmg::task {
 
-void enumerate(mesh::accessor<ro> m, field<double>::accessor<wo, na> fa);
+void enumerate(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
+  field<double>::accessor<wo, na> fa) noexcept;
 
 /*!
   Initialize a field using a general plane equation, i.e., z = D + Mx + Ny.
  */
-void bilinear(mesh::accessor<ro> m,
+void bilinear(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> fa,
   double M,
   double N,
-  double D);
+  double D) noexcept;
 
-void constant(mesh::accessor<ro> m,
+void constant(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> fa,
-  double value);
+  double value) noexcept;
 
-void fouriermodes(mesh::accessor<ro> m,
+void fouriermodes(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> ua,
   double kk,
-  double ll);
+  double ll) noexcept;
 
-void fourier_fw(mesh::accessor<ro> m,
+void fourier_fw(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> ua,
   double kk,
-  double ll);
+  double ll) noexcept;
 
-void fourier_interp(mesh::accessor<ro> m,
+void fourier_interp(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> ua,
   double kk,
-  double ll);
+  double ll) noexcept;
 
-void fourier_residual(mesh::accessor<ro> m,
+void fourier_residual(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> ua,
   double kk,
-  double ll);
+  double ll) noexcept;
 
-void gs_eigenvector(mesh::accessor<ro> m,
+void gs_eigenvector(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> ua,
   double kk,
-  double ll);
+  double ll) noexcept;
 
-void eggcarton(mesh::accessor<ro> m,
+void eggcarton(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> ua,
   field<double>::accessor<wo, na> fa,
   field<double>::accessor<wo, na> sa,
-  field<double>::accessor<wo, na> Aua);
+  field<double>::accessor<wo, na> Aua) noexcept;
 
-void poisson_stencil(mesh::accessor<ro> m,
-  stencil_field<five_pt>::accessor<wo, na> soa);
+void poisson_stencil(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
+  stencil_field<five_pt>::accessor<wo, na> soa) noexcept;
 
-void turner_stencil(mesh::accessor<ro> m,
+void turner_stencil(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<ro, na> ud1,
   field<double>::accessor<ro, na> ud2,
   stencil_field<five_pt>::accessor<wo, na> soa,
-  double dt);
+  double dt) noexcept;
 
 } // namespace gmg::task
 

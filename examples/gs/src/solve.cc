@@ -13,6 +13,7 @@ using namespace flecsi;
 
 void
 gs::action::solve(control_policy & cp) {
+  auto & sc = cp.scheduler();
   util::annotation::rguard<solve_region> guard;
   double err{std::numeric_limits<double>::max()};
 
@@ -37,14 +38,14 @@ gs::action::solve(control_policy & cp) {
       util::annotation::detail::low>
       aguard("gs-cycle");
     for(std::size_t i{0}; i < sub; ++i) {
-      execute<task::red, default_accelerator>(cp.m, ud(cp.m), fd(cp.m));
-      execute<task::black, default_accelerator>(cp.m, ud(cp.m), fd(cp.m));
+      sc.execute<task::red>(exec::on, *cp.m, ud(*cp.m), fd(*cp.m));
+      sc.execute<task::black>(exec::on, *cp.m, ud(*cp.m), fd(*cp.m));
     } // for
     ita += sub;
 
-    execute<task::discrete_operator>(cp.m, ud(cp.m), Aud(cp.m));
-    auto residual =
-      reduce<task::diff, exec::fold::sum>(cp.m, fd(cp.m), Aud(cp.m));
+    sc.execute<task::discrete_operator>(exec::on, *cp.m, ud(*cp.m), Aud(*cp.m));
+    auto residual = reduce<task::diff, exec::fold::sum>(
+      exec::on, *cp.m, fd(*cp.m), Aud(*cp.m));
     err = std::sqrt(residual.get());
     flog(info) << "residual: " << err << " (" << ita << " iterations)"
                << std::endl;

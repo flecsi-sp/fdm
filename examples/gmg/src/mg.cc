@@ -7,49 +7,52 @@
 using namespace flecsi;
 
 void
-gmg::vcycle(std::size_t level) {
-  auto & mf = mh[util::index(level)];
+gmg::vcycle(flecsi::scheduler & sc, std::size_t level) {
+  auto & mf = *mh[util::index(level)];
 
   if(level == param::mg_direct) {
     flog(warn) << "Direct solve level(index): " << level << "("
                << util::index(level) << ")" << std::endl;
-    // FIXME "Solve"
+    // FIXME: "Solve"
     for(std::size_t i{0}; i < 1000; ++i) {
       ud.flip();
-      execute<task::damped_jacobi>(mf, sod(mf), ud(mf), ud(mf, 1), fd(mf), 0.8);
+      sc.execute<task::damped_jacobi>(
+        exec::on, mf, sod(mf), ud(mf), ud(mf, 1), fd(mf), 0.8);
     } // for
   }
   else {
     flog(warn) << "Cycle level(index): " << level << "(" << util::index(level)
                << ")" << std::endl;
-    auto & mc = mh[util::index(level - 1)];
+    auto & mc = *mh[util::index(level - 1)];
 
     // Pre Smoothing
     for(std::size_t i{0}; i < param::mg_pre; ++i) {
       ud.flip();
-      execute<task::damped_jacobi>(mf, sod(mf), ud(mf), ud(mf, 1), fd(mf), 0.8);
+      sc.execute<task::damped_jacobi>(
+        exec::on, mf, sod(mf), ud(mf), ud(mf, 1), fd(mf), 0.8);
     } // for
 
     // Recursive solve
-    execute<task::residual>(mf, sod(mf), ud(mf), fd(mf), rd(mf));
-    execute<task::full_weighting>(mf, mc, rd(mf), fd(mc));
-    execute<task::constant>(mc, ud(mc), 0.0);
+    sc.execute<task::residual>(exec::on, mf, sod(mf), ud(mf), fd(mf), rd(mf));
+    sc.execute<task::full_weighting>(exec::on, mf, mc, rd(mf), fd(mc));
+    sc.execute<task::constant>(exec::on, mc, ud(mc), 0.0);
 
-    gmg::vcycle(level - 1);
+    gmg::vcycle(sc, level - 1);
 
-    execute<task::bilinear_interpolation>(mc, mf, ud(mc), ed(mf));
-    execute<task::correction>(mf, ud(mf), ed(mf));
+    sc.execute<task::bilinear_interpolation>(exec::on, mc, mf, ud(mc), ed(mf));
+    sc.execute<task::correction>(exec::on, mf, ud(mf), ed(mf));
 
     // Post Smoothing
     for(std::size_t i{0}; i < param::mg_post; ++i) {
       ud.flip();
-      execute<task::damped_jacobi>(mf, sod(mf), ud(mf), ud(mf, 1), fd(mf), 0.8);
+      sc.execute<task::damped_jacobi>(
+        exec::on, mf, sod(mf), ud(mf), ud(mf, 1), fd(mf), 0.8);
     } // for
   } // if
 } // vcycle
 
 void
-gmg::fmg(std::size_t level) {
+gmg::fmg(flecsi::scheduler & sc, std::size_t level) {
   auto & mf = mh[util::index(level)];
 
   // The scheme requires:
@@ -63,7 +66,7 @@ gmg::fmg(std::size_t level) {
                << ")" << std::endl;
 
     // If in the deepest level, the V-Cycle is already doing a direct solve
-    gmg::vcycle(level);
+    gmg::vcycle(sc, level);
   }
   else {
     flog(warn) << "Cycle level(index): " << level << "(" << util::index(level)
@@ -71,18 +74,19 @@ gmg::fmg(std::size_t level) {
     auto & mc = mh[util::index(level - 1)];
 
     // Set the RHS and solution field
-    execute<task::full_weighting>(mf, mc, fd(mf), fd(mc));
-    execute<task::full_weighting>(mf, mc, ud(mf), ud(mc));
+    sc.execute<task::full_weighting>(exec::on, *mf, *mc, fd(*mf), fd(*mc));
+    sc.execute<task::full_weighting>(exec::on, *mf, *mc, ud(*mf), ud(*mc));
 
     // Now call solve for one level deeper
-    gmg::fmg(level - 1);
+    gmg::fmg(sc, level - 1);
 
     // Interpolate solution back up (RHS does not change)
-    execute<task::bilinear_interpolation>(mc, mf, ud(mc), ud(mf));
+    sc.execute<task::bilinear_interpolation>(
+      exec::on, *mc, *mf, ud(*mc), ud(*mf));
 
     // Do a V-Cycle
     for(std::size_t i{0}; i < param::mg_cycles; ++i) {
-      gmg::vcycle(level);
+      gmg::vcycle(sc, level);
     } // for
   } // if
 } // fmg

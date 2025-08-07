@@ -6,6 +6,7 @@ using namespace flecsi;
 
 void
 gmg::action::finalize(control_policy & cp) {
-  auto & m = mh[0];
-  execute<task::io, mpi>(m, ud(m), "solver");
+  auto & sc = cp.scheduler();
+  auto & m = *mh[0];
+  sc.execute<task::io>(exec::on, m, ud(m), "solver");
 } // finalize

@@ -111,9 +111,9 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
   struct interface : B {
 
     template<mesh::axis A>
-      FLECSI_INLINE_TARGET base::axis_info axis() const {
-        return B::template axis<mesh::vertices, A>();
-      }
+    FLECSI_INLINE_TARGET base::axis_info axis() const {
+      return B::template axis<mesh::vertices, A>();
+    }
 
     /// Return the size for the given axis and domain.
     /// @tparam A  The mesh axis.
@@ -122,8 +122,8 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
     std::size_t size() {
       const base::axis_info a = axis<A>();
       if constexpr(DM == interior) {
-        const bool low = B::template is_low<mesh::vertices, A>();
-        const bool high = B::template is_high<mesh::vertices, A>();
+        const bool low = a.low();
+        const bool high = a.high();
 
         if(low && high) { /* degenerate */
           return a.logical - 2;
@@ -236,12 +236,11 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
     template<mesh::axis A, boundary BD>
     bool is_boundary(std::size_t i) {
 
-      auto const loff =
-        B::template offset<mesh::vertices, A, base::domain::logical>();
-      auto const lsize =
-        B::template size<mesh::vertices, A, base::domain::logical>();
-      const bool l = B::template is_low<mesh::vertices, A>();
-      const bool h = B::template is_high<mesh::vertices, A>();
+      const base::axis_info a = axis<A>();
+      auto const loff = a.layout.logical<0>();
+      auto const lsize = a.layout.logical<1>();
+      const bool l = a.low();
+      const bool h = a.high();
 
       if(l && h) { /* degenerate */
         if constexpr(BD == boundary::low) {
@@ -303,7 +302,7 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
     Color Method.
    *--------------------------------------------------------------------------*/
 
-  static coloring color(std::size_t num_colors, gcoord axis_extents) {
+  static coloring color(flecsi::Color num_colors, gcoord axis_extents) {
     index_definition idef;
     idef.axes = base::make_axes(num_colors, axis_extents);
     for(auto & a : idef.axes) {
@@ -329,16 +328,19 @@ struct mesh : flecsi::topo::specialization<flecsi::topo::narray, mesh> {
 
   using grect = std::array<std::array<double, 2>, 2>;
 
-  static void set_geometry(mesh::accessor<flecsi::rw> sm, grect const & g) {
+  static void set_geometry(flecsi::exec::cpu,
+    mesh::accessor<flecsi::rw> sm,
+    grect const & g) noexcept {
     sm.set_geometry(
       std::abs(g[0][1] - g[0][0]) / (sm.size<x_axis, global>() - 1),
       std::abs(g[1][1] - g[1][0]) / (sm.size<y_axis, global>() - 1));
   }
 
-  static void initialize(flecsi::data::topology_slot<mesh> & s,
+  static void initialize(flecsi::scheduler & s,
+    mesh::topology & m,
     coloring const &,
     grect const & geometry) {
-    flecsi::execute<set_geometry, flecsi::mpi>(s, geometry);
+    s.execute<set_geometry>(flecsi::exec::on, m, geometry);
   } // initialize
 
 }; // struct mesh

@@ -9,11 +9,14 @@
 
 namespace gmg::task {
 
-void io(mesh::accessor<ro> m,
+void io(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<ro, ro> fa,
-  std::string filebase);
+  std::string filebase) noexcept;
 
-void print(mesh::accessor<ro> m, field<double>::accessor<ro, ro> fa);
+void print(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
+  field<double>::accessor<ro, ro> fa) noexcept;
 
 } // namespace gmg::task
 

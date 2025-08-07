@@ -11,8 +11,8 @@
 
 namespace gs {
 
-inline constexpr flecsi::partition_privilege_t na = flecsi::na, ro = flecsi::ro,
-                                               wo = flecsi::wo, rw = flecsi::rw;
+inline constexpr flecsi::privilege na = flecsi::na, ro = flecsi::ro,
+                                   wo = flecsi::wo, rw = flecsi::rw;
 
 using mesh = fdm::mesh;
 

@@ -1,7 +1,9 @@
 #include "init.hh"
 
 void
-gmg::task::enumerate(mesh::accessor<ro> m, field<double>::accessor<wo, na> fa) {
+gmg::task::enumerate(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
+  field<double>::accessor<wo, na> fa) noexcept {
   auto f = m.mdcolex<mesh::vertices>(fa);
   for(auto j : m.vertices<mesh::y_axis, mesh::logical>()) {
     for(auto i : m.vertices<mesh::x_axis, mesh::logical>()) {
@@ -12,11 +14,12 @@ gmg::task::enumerate(mesh::accessor<ro> m, field<double>::accessor<wo, na> fa) {
 } // constant
 
 void
-gmg::task::bilinear(mesh::accessor<ro> m,
+gmg::task::bilinear(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> fa,
   double M,
   double N,
-  double D) {
+  double D) noexcept {
   auto f = m.mdcolex<mesh::vertices>(fa);
   for(auto j : m.vertices<mesh::y_axis, mesh::logical>()) {
     auto y = m.value<mesh::y_axis>(j);
@@ -28,9 +31,10 @@ gmg::task::bilinear(mesh::accessor<ro> m,
 } // bilinear
 
 void
-gmg::task::constant(mesh::accessor<ro> m,
+gmg::task::constant(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> fa,
-  double value) {
+  double value) noexcept {
   auto f = m.mdcolex<mesh::vertices>(fa);
   forall(j, (m.vertices<mesh::y_axis, mesh::logical>()), "init_constant") {
     for(auto i : m.vertices<mesh::x_axis, mesh::logical>()) {
@@ -43,11 +47,12 @@ constexpr double K = 12.0;
 constexpr double L = 2.0;
 
 void
-gmg::task::eggcarton(mesh::accessor<ro> m,
+gmg::task::eggcarton(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> ua,
   field<double>::accessor<wo, na> fa,
   field<double>::accessor<wo, na> sa,
-  field<double>::accessor<wo, na> Aua) {
+  field<double>::accessor<wo, na> Aua) noexcept {
   auto u = m.mdcolex<mesh::vertices>(ua);
   auto f = m.mdcolex<mesh::vertices>(fa);
   auto s = m.mdcolex<mesh::vertices>(sa);
@@ -68,10 +73,11 @@ gmg::task::eggcarton(mesh::accessor<ro> m,
 } // eggcarton
 
 void
-gmg::task::fouriermodes(mesh::accessor<ro> m,
+gmg::task::fouriermodes(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> ua,
   double kk,
-  double ll) {
+  double ll) noexcept {
   auto u = m.mdcolex<mesh::vertices>(ua);
   forall(j, (m.vertices<mesh::y_axis, mesh::logical>()), "init_fouriermodes") {
     const double y = m.value<mesh::y_axis>(j);
@@ -83,10 +89,11 @@ gmg::task::fouriermodes(mesh::accessor<ro> m,
 } // fouriermodes
 
 void
-gmg::task::fourier_fw(mesh::accessor<ro> m,
+gmg::task::fourier_fw(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> ua,
   double kk,
-  double ll) {
+  double ll) noexcept {
   auto u = m.mdcolex<mesh::vertices>(ua);
   double factor;
 
@@ -103,10 +110,11 @@ gmg::task::fourier_fw(mesh::accessor<ro> m,
 } // fourier_fw
 
 void
-gmg::task::fourier_interp(mesh::accessor<ro> m,
+gmg::task::fourier_interp(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> ua,
   double kk,
-  double ll) {
+  double ll) noexcept {
   auto u = m.mdcolex<mesh::vertices>(ua);
   double cos2i, sin2i, cos2j, sin2j, kkp, llp;
 
@@ -130,10 +138,11 @@ gmg::task::fourier_interp(mesh::accessor<ro> m,
 } // fourier_interp
 
 void
-gmg::task::fourier_residual(mesh::accessor<ro> m,
+gmg::task::fourier_residual(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> ua,
   double kk,
-  double ll) {
+  double ll) noexcept {
   auto u = m.mdcolex<mesh::vertices>(ua);
   const auto dx = m.xdelta();
   const auto dy = m.ydelta();
@@ -153,10 +162,11 @@ gmg::task::fourier_residual(mesh::accessor<ro> m,
 } // fourier_residual
 
 void
-gmg::task::gs_eigenvector(mesh::accessor<ro> m,
+gmg::task::gs_eigenvector(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> ua,
   double kk,
-  double ll) {
+  double ll) noexcept {
   auto u = m.mdcolex<mesh::vertices>(ua);
   const auto dx = m.xdelta();
   const auto dy = m.ydelta();
@@ -188,8 +198,9 @@ gmg::task::gs_eigenvector(mesh::accessor<ro> m,
 } // gs_eigenvector
 
 void
-gmg::task::poisson_stencil(mesh::accessor<ro> m,
-  stencil_field<five_pt>::accessor<wo, na> soa) {
+gmg::task::poisson_stencil(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
+  stencil_field<five_pt>::accessor<wo, na> soa) noexcept {
   auto so = m.stencil_op<mesh::vertices, five_pt>(soa);
 
   const double dx{m.xdelta()};
@@ -208,11 +219,12 @@ gmg::task::poisson_stencil(mesh::accessor<ro> m,
 } // poisson_stencil
 
 void
-gmg::task::turner_stencil(mesh::accessor<ro> m,
+gmg::task::turner_stencil(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<ro, na> ud1,
   field<double>::accessor<ro, na> ud2,
   stencil_field<five_pt>::accessor<wo, na> soa,
-  double dt) {
+  double dt) noexcept {
 
   auto u1 = m.mdcolex<mesh::vertices>(ud1);
   auto u2 = m.mdcolex<mesh::vertices>(ud2);

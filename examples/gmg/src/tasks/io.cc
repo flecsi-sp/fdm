@@ -6,18 +6,19 @@
 using namespace flecsi;
 
 void
-gmg::task::io(mesh::accessor<ro> m,
+gmg::task::io(exec::cpu s,
+  mesh::accessor<ro> m,
   field<double>::accessor<ro, ro> fa,
-  std::string filebase) {
+  std::string filebase) noexcept {
   auto f = m.mdcolex<mesh::vertices>(fa);
 
   std::stringstream ss;
   ss << filebase;
-  if(processes() == 1) {
+  if(s.launch().size == 1) {
     ss << ".dat";
   }
   else {
-    ss << "-" << process() << ".dat";
+    ss << "-" << s.launch().index << ".dat";
   } // if
 
   std::ofstream solution(ss.str(), std::ios::out);
@@ -32,7 +33,9 @@ gmg::task::io(mesh::accessor<ro> m,
 } // io
 
 void
-gmg::task::print(mesh::accessor<ro> m, field<double>::accessor<ro, ro> fa) {
+gmg::task::print(exec::cpu,
+  mesh::accessor<ro> m,
+  field<double>::accessor<ro, ro> fa) noexcept {
   auto f = m.mdcolex<mesh::vertices>(fa);
 
   std::stringstream ss;

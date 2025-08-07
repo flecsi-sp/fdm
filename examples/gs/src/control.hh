@@ -40,7 +40,7 @@ struct control_policy : flecsi::run::control_base {
     point<cp::analyze>,
     point<cp::finalize>>;
 
-  fdm::mesh::slot m;
+  fdm::mesh::ptr m;
 }; // struct control_policy
 
 using control = flecsi::run::control<control_policy>;

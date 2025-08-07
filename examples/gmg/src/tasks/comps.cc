@@ -3,10 +3,11 @@
 using namespace gmg;
 
 void
-task::full_weighting(mesh::accessor<ro> mf,
+task::full_weighting(flecsi::exec::cpu,
+  mesh::accessor<ro> mf,
   mesh::accessor<ro> mc,
   field<double>::accessor<ro, ro> rfa,
-  field<double>::accessor<rw, ro> fca) {
+  field<double>::accessor<rw, ro> fca) noexcept {
   auto rf = mf.mdcolex<mesh::vertices>(rfa);
   auto fc = mc.mdcolex<mesh::vertices>(fca);
 
@@ -24,10 +25,11 @@ task::full_weighting(mesh::accessor<ro> mf,
 } // full_weighting
 
 void
-task::bilinear_interpolation(mesh::accessor<ro> mc,
+task::bilinear_interpolation(flecsi::exec::cpu,
+  mesh::accessor<ro> mc,
   mesh::accessor<ro> mf,
   field<double>::accessor<ro, ro> uca,
-  field<double>::accessor<rw, ro> efa) {
+  field<double>::accessor<rw, ro> efa) noexcept {
   auto uc = mc.mdcolex<mesh::vertices>(uca);
   auto ef = mf.mdcolex<mesh::vertices>(efa);
 
@@ -59,12 +61,13 @@ task::bilinear_interpolation(mesh::accessor<ro> mc,
 } // bilinear_interpolation
 
 void
-task::damped_jacobi(mesh::accessor<ro> m,
+task::damped_jacobi(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<rw, ro> ua_new,
   field<double>::accessor<ro, ro> ua_old,
   field<double>::accessor<ro, ro> fa,
-  double omega) {
+  double omega) noexcept {
   auto so = m.stencil_op<mesh::vertices, five_pt>(soa);
   auto u_new = m.mdcolex<mesh::vertices>(ua_new);
   auto u_old = m.mdcolex<mesh::vertices>(ua_old);
@@ -84,10 +87,11 @@ task::damped_jacobi(mesh::accessor<ro> m,
 } // damped_jacobi
 
 void
-task::red(mesh::accessor<ro> m,
+task::red(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<rw, ro> ua,
-  field<double>::accessor<ro, ro> fa) {
+  field<double>::accessor<ro, ro> fa) noexcept {
   auto so = m.stencil_op<mesh::vertices, five_pt>(soa);
   auto u = m.mdcolex<mesh::vertices>(ua);
   auto f = m.mdcolex<mesh::vertices>(fa);
@@ -104,10 +108,11 @@ task::red(mesh::accessor<ro> m,
 } // red
 
 void
-task::black(mesh::accessor<ro> m,
+task::black(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<rw, ro> ua,
-  field<double>::accessor<ro, ro> fa) {
+  field<double>::accessor<ro, ro> fa) noexcept {
   auto so = m.stencil_op<mesh::vertices, five_pt>(soa);
   auto u = m.mdcolex<mesh::vertices>(ua);
   auto f = m.mdcolex<mesh::vertices>(fa);
@@ -124,11 +129,12 @@ task::black(mesh::accessor<ro> m,
 } // black
 
 void
-task::residual(mesh::accessor<ro> m,
+task::residual(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<ro, ro> ua,
   field<double>::accessor<ro, ro> fa,
-  field<double>::accessor<wo, ro> ra) {
+  field<double>::accessor<wo, ro> ra) noexcept {
   auto so = m.stencil_op<mesh::vertices, five_pt>(soa);
   auto u = m.mdcolex<mesh::vertices>(ua);
   auto f = m.mdcolex<mesh::vertices>(fa);
@@ -146,9 +152,10 @@ task::residual(mesh::accessor<ro> m,
 } // residual
 
 void
-task::correction(mesh::accessor<ro> m,
+task::correction(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<rw, ro> ua,
-  field<double>::accessor<ro, ro> ea) {
+  field<double>::accessor<ro, ro> ea) noexcept {
   auto u = m.mdcolex<mesh::vertices>(ua);
   auto e = m.mdcolex<mesh::vertices>(ea);
 

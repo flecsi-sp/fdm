@@ -9,14 +9,15 @@ using namespace flecsi;
 
 void
 gs::action::init_mesh(control_policy & cp) {
+  auto & sc = cp.scheduler();
   flog(info) << "Initializing " << opt::x_extents.value() << "x"
              << opt::y_extents.value() << " mesh" << std::endl;
-  flecsi::flog::flush();
+  flog::flush();
 
   mesh::gcoord axis_extents{opt::x_extents.value(), opt::y_extents.value()};
 
   const auto num_colors =
-    opt::colors.value() == -1 ? flecsi::processes() : opt::colors.value();
+    opt::colors.value() == -1 ? sc.runtime().processes() : opt::colors.value();
   flog(info) << "colors: " << num_colors << std::endl;
 
   mesh::grect geometry;
@@ -24,5 +25,5 @@ gs::action::init_mesh(control_policy & cp) {
   geometry[0][1] = 1.0;
   geometry[1] = geometry[0];
 
-  cp.m.allocate(mesh::mpi_coloring{num_colors, axis_extents}, geometry);
+  sc.allocate(cp.m, mesh::mpi_coloring{sc, num_colors, axis_extents}, geometry);
 } // init_mesh

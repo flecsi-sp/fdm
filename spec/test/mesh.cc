@@ -5,13 +5,13 @@
 using namespace flecsi;
 using namespace fdm;
 
-const flecsi::field<double>::definition<mesh, mesh::vertices> rho;
+const field<double>::definition<mesh, mesh::vertices> rho;
 
-constexpr std::size_t vertices_x{10}, vertices_y{10};
+constexpr std::size_t vertices_x{12}, vertices_y{12};
 constexpr mesh::grect geom{{{0.0, 1.0}, {0.0, 1.0}}};
 
 void
-init_mesh(mesh::accessor<ro> m, field<double>::accessor<wo, wo> f_a) {
+init_mesh(mesh::accessor<ro> m, field<double>::accessor<wo, wo> f_a) noexcept {
   auto f = m.mdcolex<mesh::vertices>(f_a);
 
   for(auto j : m.vertices<mesh::y_axis, mesh::logical>()) {
@@ -70,15 +70,16 @@ verify_mesh(mesh::accessor<ro> m, field<double>::accessor<wo, wo> f_a) {
 } // verify_mesh
 
 int
-fdm_mesh() {
+fdm_mesh(scheduler & s) {
   UNIT("DRIVER") {
     mesh::gcoord axis_extents{vertices_x, vertices_y};
-    mesh::slot m;
-    auto parts = mesh::distribute(processes(), {vertices_x, vertices_y});
-    m.allocate(mesh::mpi_coloring{parts, axis_extents}, geom);
+    mesh::ptr m;
+    auto parts =
+      mesh::distribute(s.runtime().processes(), {vertices_x, vertices_y});
+    s.allocate(m, mesh::mpi_coloring{s, parts, axis_extents}, geom);
 
-    execute<init_mesh>(m, rho(m));
-    EXPECT_EQ(test<verify_mesh>(m, rho(m)), 0);
+    s.execute<init_mesh>(*m, rho(*m));
+    EXPECT_EQ(test<verify_mesh>(*m, rho(*m)), 0);
   }; // UNIT
 } // mesh
 
