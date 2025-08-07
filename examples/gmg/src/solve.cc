@@ -96,7 +96,7 @@ action::solve(control_policy & cp) {
       exec::on, *mf, sod(*mf), ud(*mf), fd(*mf), rd(*mf));
     sc.execute<task::full_weighting>(exec::on, *mf, *mc, rd(*mf), fd(*mc));
     sc.execute<task::constant>(exec::on, *mc, ud(*mc), 0.0);
-    execute<task::constant>(exec::on, *mc, ud(*mc, 1), 0.0);
+    sc.execute<task::constant>(exec::on, *mc, ud(*mc, 1), 0.0);
 
     // "Solve" on coarse grid
     for(std::size_t i{0}; i < 500; ++i) {

@@ -44,7 +44,7 @@ gs::action::solve(control_policy & cp) {
     ita += sub;
 
     sc.execute<task::discrete_operator>(exec::on, *cp.m, ud(*cp.m), Aud(*cp.m));
-    auto residual = reduce<task::diff, exec::fold::sum>(
+    auto residual = sc.reduce<task::diff, exec::fold::sum>(
       exec::on, *cp.m, fd(*cp.m), Aud(*cp.m));
     err = std::sqrt(residual.get());
     flog(info) << "residual: " << err << " (" << ita << " iterations)"

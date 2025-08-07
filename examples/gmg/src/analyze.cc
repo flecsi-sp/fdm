@@ -40,10 +40,11 @@ action::analyze(control_policy & cp) {
         exec::on, m, sod(m), ud(m), ud(m, 1), fd(m), omega);
 
       // Multiply by eigenvalue
-      sc.execute<task::product_by_eigenvalue_jb>(exec::on, m, sd(m), omega, k, k);
+      sc.execute<task::product_by_eigenvalue_jb>(
+        exec::on, m, sd(m), omega, k, k);
 
-      prediction = norm::errl2();
-      err = norm::l2();
+      prediction = norm::errl2(sc);
+      err = norm::l2(sc);
       difference = std::abs(prediction - err) / prediction;
 
       flog(info) << "Jacobi iteration, prediction, error, difference: "
@@ -75,8 +76,8 @@ action::analyze(control_policy & cp) {
       // Multiply by eigenvalue
       sc.execute<task::product_by_eigenvalue_gs>(exec::on, m, sd(m), k, l);
 
-      prediction = norm::errl2();
-      err = norm::l2();
+      prediction = norm::errl2(sc);
+      err = norm::l2(sc);
       difference = std::abs(prediction - err) / prediction;
 
       flog(info) << "Gauss-Seidel iteration, prediction, error, difference: "
@@ -101,7 +102,7 @@ action::analyze(control_policy & cp) {
   sc.execute<task::full_weighting>(exec::on, mf, mc, ud(mf), ud(mc));
 
   // Check solution
-  err = norm::fwl2();
+  err = norm::fwl2(sc);
   flog(info) << "FW error " << err << std::endl;
 
 #endif
@@ -119,7 +120,7 @@ action::analyze(control_policy & cp) {
   sc.execute<task::bilinear_interpolation>(exec::on, mc, mf, ud(mc), ud(mf));
 
   // Check solution
-  err = norm::interpl2();
+  err = norm::interpl2(sc);
   flog(info) << "Interpolation error " << err << std::endl;
 
 #endif
@@ -138,7 +139,7 @@ action::analyze(control_policy & cp) {
   sc.execute<task::residual>(exec::on, m, sod(m), ud(m), fd(m), rd(m));
 
   // Check solution
-  err = norm::resl2();
+  err = norm::resl2(sc);
   flog(info) << "Residual error " << err << std::endl;
 #endif
 
@@ -150,10 +151,10 @@ action::analyze(control_policy & cp) {
   sc.execute<task::eggcarton>(exec::on, m, ud(m), fd(m), sd(m), Aud(m));
 
   // Solve
-  fmg(param::fine_level);
+  fmg(sc, param::fine_level);
 
   // Check difference with solution
-  err = norm::errl2();
+  err = norm::errl2(sc);
   flog(info) << "Error " << err << std::endl;
 
 #endif
