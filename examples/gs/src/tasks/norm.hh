@@ -15,7 +15,9 @@ double diff(flecsi::exec::cpu,
   field<double>::accessor<ro, ro> aa,
   field<double>::accessor<ro, ro> ba) noexcept;
 
-double scale(flecsi::exec::cpu, mesh::accessor<ro> m, double sum) noexcept;
+double scale(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
+  flecsi::future<double> sum) noexcept;
 
 void display_l2(flecsi::exec::cpu,
   mesh::accessor<ro> m,

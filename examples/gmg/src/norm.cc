@@ -49,6 +49,7 @@ double
 norm::max(flecsi::scheduler & sc) {
   auto & mf = *mh[0];
   sc.execute<task::discrete_operator>(exec::on, mf, sod(mf), ud(mf), Aud(mf));
-  return sc.reduce<task::diff_max, exec::fold::max>(exec::on, mf, fd(mf), Aud(mf))
+  return sc
+    .reduce<task::diff_max, exec::fold::max>(exec::on, mf, fd(mf), Aud(mf))
     .get();
 }

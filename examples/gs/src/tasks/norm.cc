@@ -21,8 +21,8 @@ gs::task::diff(exec::cpu,
 } // diff
 
 double
-gs::task::scale(exec::cpu, mesh::accessor<ro> m, double sum) noexcept {
-  return m.dxdy() * sum;
+gs::task::scale(exec::cpu, mesh::accessor<ro> m, future<double> sum) noexcept {
+  return m.dxdy() * sum.get();
 } // scale
 
 void
