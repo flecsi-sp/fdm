@@ -21,11 +21,11 @@ main(int argc, char ** argv) {
     return 1;
   }
 
-  const flecsi::run::dependencies_guard dg;
+  const run::dependencies_guard dg;
   run::config cfg;
   cfg.flog.tags = {opt::flog_tags};
   cfg.flog.verbose = {opt::flog_verbose};
-  const runtime run(cfg);
+  runtime run(cfg);
 
   flog::add_output_stream("clog", std::clog, true);
   return run.control<control>();

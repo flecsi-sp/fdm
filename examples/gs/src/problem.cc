@@ -10,16 +10,17 @@ using namespace flecsi;
 
 void
 gs::action::problem(control_policy & cp) {
+  auto & sc = cp.scheduler();
   util::annotation::rguard<problem_region> guard;
-  execute<task::eggcarton, default_accelerator>(
-    cp.m, ud(cp.m), fd(cp.m), sd(cp.m), Aud(cp.m));
-  execute<task::io, flecsi::mpi>(cp.m, ud(cp.m), "init");
-  execute<task::io, flecsi::mpi>(cp.m, sd(cp.m), "actual");
+  sc.execute<task::eggcarton>(
+    exec::on, *cp.m, ud(*cp.m), fd(*cp.m), sd(*cp.m), Aud(*cp.m));
+  sc.execute<task::io>(exec::on, *cp.m, ud(*cp.m), "init");
+  sc.execute<task::io>(exec::on, *cp.m, sd(*cp.m), "actual");
 
   // This can be used for debugging
 #if 0
-  execute<task::redblack>(cp.m, test(cp.m));
-  execute<task::print>(cp.m, test(cp.m));
+  sc.execute<task::redblack>(exec::on, *cp.m, test(*cp.m));
+  sc.execute<task::print>(exec::on, *cp.m, test(*cp.m));
 #endif
 
   flog::flush();

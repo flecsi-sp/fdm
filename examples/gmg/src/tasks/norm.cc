@@ -3,9 +3,10 @@
 using namespace gmg;
 
 double
-task::diff_sum_square(mesh::accessor<ro> m,
+task::diff_sum_square(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<ro, ro> aa,
-  field<double>::accessor<ro, ro> ba) {
+  field<double>::accessor<ro, ro> ba) noexcept {
   auto a = m.mdcolex<mesh::vertices>(aa);
   auto b = m.mdcolex<mesh::vertices>(ba);
 
@@ -21,9 +22,10 @@ task::diff_sum_square(mesh::accessor<ro> m,
 } // diff
 
 double
-task::diff_max(mesh::accessor<ro> m,
+task::diff_max(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<ro, ro> aa,
-  field<double>::accessor<ro, ro> ba) {
+  field<double>::accessor<ro, ro> ba) noexcept {
   auto a = m.mdcolex<mesh::vertices>(aa);
   auto b = m.mdcolex<mesh::vertices>(ba);
 
@@ -38,10 +40,11 @@ task::diff_max(mesh::accessor<ro> m,
 } // diff
 
 void
-task::discrete_operator(mesh::accessor<ro> m,
+task::discrete_operator(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<ro, ro> ua,
-  field<double>::accessor<wo, ro> Aua) {
+  field<double>::accessor<wo, ro> Aua) noexcept {
   auto so = m.stencil_op<mesh::vertices, five_pt>(soa);
   auto u = m.mdcolex<mesh::vertices>(ua);
   auto Au = m.mdcolex<mesh::vertices>(Aua);

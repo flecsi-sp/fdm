@@ -18,10 +18,11 @@ using namespace flecsi;
 
 void
 action::init(control_policy & cp) {
+  auto & sc = cp.scheduler();
   YAML::Node config = YAML::LoadFile(opt::config.value());
 
   const auto num_colors =
-    opt::colors.value() == -1 ? flecsi::processes() : opt::colors.value();
+    opt::colors.value() == -1 ? sc.runtime().processes() : opt::colors.value();
 
   /*--------------------------------------------------------------------------*
     Hierarchy setup.
@@ -92,64 +93,65 @@ action::init(control_policy & cp) {
   do {
     mesh::gcoord axis_extents{vertices_x, vertices_y};
     auto & m = mh.emplace_back();
-    m.allocate(mesh::mpi_coloring{parts, axis_extents}, geom);
+    sc.allocate(m, mesh::mpi_coloring{sc, parts, axis_extents}, geom);
 
     if(config["problem"].as<std::string>() == "eggcarton") {
       if(index == 0) {
-        execute<task::eggcarton>(m, ud(m), fd(m), sd(m), Aud(m));
-        execute<task::constant>(m, ud(m, 1), 0.0);
-        execute<task::constant>(m, rd(m), 0.0);
-        execute<task::constant>(m, ed(m), 0.0);
-        execute<task::io>(m, fd(m), "rhs");
-        execute<task::io>(m, sd(m), "actual");
-        execute<task::poisson_stencil>(m, sod(m));
+        sc.execute<task::eggcarton>(
+          exec::on, *m, ud(*m), fd(*m), sd(*m), Aud(*m));
+        sc.execute<task::constant>(exec::on, *m, ud(*m, 1), 0.0);
+        sc.execute<task::constant>(exec::on, *m, rd(*m), 0.0);
+        sc.execute<task::constant>(exec::on, *m, ed(*m), 0.0);
+        sc.execute<task::io>(exec::on, *m, fd(*m), "rhs");
+        sc.execute<task::io>(exec::on, *m, sd(*m), "actual");
+        sc.execute<task::poisson_stencil>(exec::on, *m, sod(*m));
       }
       else {
-        execute<task::constant>(m, ud(m), 0.0);
-        execute<task::constant>(m, ud(m, 1), 0.0);
-        execute<task::constant>(m, fd(m), 0.0);
-        execute<task::constant>(m, sd(m), 0.0);
-        execute<task::constant>(m, rd(m), 0.0);
-        execute<task::constant>(m, ed(m), 0.0);
-        execute<task::constant>(m, Aud(m), 0.0);
-        execute<task::poisson_stencil>(m, sod(m));
+        sc.execute<task::constant>(exec::on, *m, ud(*m), 0.0);
+        sc.execute<task::constant>(exec::on, *m, ud(*m, 1), 0.0);
+        sc.execute<task::constant>(exec::on, *m, fd(*m), 0.0);
+        sc.execute<task::constant>(exec::on, *m, sd(*m), 0.0);
+        sc.execute<task::constant>(exec::on, *m, rd(*m), 0.0);
+        sc.execute<task::constant>(exec::on, *m, ed(*m), 0.0);
+        sc.execute<task::constant>(exec::on, *m, Aud(*m), 0.0);
+        sc.execute<task::poisson_stencil>(exec::on, *m, sod(*m));
       } // if
     }
     else if(config["problem"].as<std::string>() == "enumerate") {
-      execute<task::enumerate>(m, ud(m));
-      execute<task::constant>(m, ud(m, 1), 0.0);
-      execute<task::enumerate>(m, fd(m));
-      execute<task::enumerate>(m, sd(m));
-      execute<task::enumerate>(m, Aud(m));
-      execute<task::poisson_stencil>(m, sod(m));
+      sc.execute<task::enumerate>(exec::on, *m, ud(*m));
+      sc.execute<task::constant>(exec::on, *m, ud(*m, 1), 0.0);
+      sc.execute<task::enumerate>(exec::on, *m, fd(*m));
+      sc.execute<task::enumerate>(exec::on, *m, sd(*m));
+      sc.execute<task::enumerate>(exec::on, *m, Aud(*m));
+      sc.execute<task::poisson_stencil>(exec::on, *m, sod(*m));
     }
     else if(config["problem"].as<std::string>() == "bilinear") {
-      execute<task::bilinear>(m, ud(m), 1.0, 1.0, 0.0);
-      execute<task::constant>(m, ud(m, 1), 0.0);
-      execute<task::bilinear>(m, fd(m), 1.0, 1.0, 0.0);
-      execute<task::bilinear>(m, sd(m), 1.0, 1.0, 0.0);
-      execute<task::bilinear>(m, rd(m), 1.0, 1.0, 0.0);
-      execute<task::bilinear>(m, ed(m), 1.0, 1.0, 0.0);
-      execute<task::bilinear>(m, Aud(m), 1.0, 1.0, 0.0);
-      execute<task::poisson_stencil>(m, sod(m));
+      sc.execute<task::bilinear>(exec::on, *m, ud(*m), 1.0, 1.0, 0.0);
+      sc.execute<task::constant>(exec::on, *m, ud(*m, 1), 0.0);
+      sc.execute<task::bilinear>(exec::on, *m, fd(*m), 1.0, 1.0, 0.0);
+      sc.execute<task::bilinear>(exec::on, *m, sd(*m), 1.0, 1.0, 0.0);
+      sc.execute<task::bilinear>(exec::on, *m, rd(*m), 1.0, 1.0, 0.0);
+      sc.execute<task::bilinear>(exec::on, *m, ed(*m), 1.0, 1.0, 0.0);
+      sc.execute<task::bilinear>(exec::on, *m, Aud(*m), 1.0, 1.0, 0.0);
+      sc.execute<task::poisson_stencil>(exec::on, *m, sod(*m));
     }
     else if(config["problem"].as<std::string>() == "constant") {
-      execute<task::constant>(m, ud(m), util::level(index));
-      execute<task::constant>(m, ud(m, 1), 0.0);
-      execute<task::constant>(m, fd(m), util::level(index));
-      execute<task::constant>(m, sd(m), util::level(index));
-      execute<task::constant>(m, Aud(m), util::level(index));
-      execute<task::poisson_stencil>(m, sod(m));
+      sc.execute<task::constant>(exec::on, *m, ud(*m), util::level(index));
+      sc.execute<task::constant>(exec::on, *m, ud(*m, 1), 0.0);
+      sc.execute<task::constant>(exec::on, *m, fd(*m), util::level(index));
+      sc.execute<task::constant>(exec::on, *m, sd(*m), util::level(index));
+      sc.execute<task::constant>(exec::on, *m, Aud(*m), util::level(index));
+      sc.execute<task::poisson_stencil>(exec::on, *m, sod(*m));
     }
     else if(config["problem"].as<std::string>() == "verification") {
-      execute<task::constant>(m, ud(m), 0.0);
-      execute<task::constant>(m, ud(m, 1), 0.0);
-      execute<task::constant>(m, fd(m), 0.0);
-      execute<task::constant>(m, ed(m), 0.0);
-      execute<task::constant>(m, sd(m), 0.0);
-      execute<task::constant>(m, rd(m), 0.0);
-      execute<task::constant>(m, Aud(m), 0.0);
-      execute<task::poisson_stencil>(m, sod(m));
+      sc.execute<task::constant>(exec::on, *m, ud(*m), 0.0);
+      sc.execute<task::constant>(exec::on, *m, ud(*m, 1), 0.0);
+      sc.execute<task::constant>(exec::on, *m, fd(*m), 0.0);
+      sc.execute<task::constant>(exec::on, *m, ed(*m), 0.0);
+      sc.execute<task::constant>(exec::on, *m, sd(*m), 0.0);
+      sc.execute<task::constant>(exec::on, *m, rd(*m), 0.0);
+      sc.execute<task::constant>(exec::on, *m, Aud(*m), 0.0);
+      sc.execute<task::poisson_stencil>(exec::on, *m, sod(*m));
     } // if
 
     vertices_x = std::pow(2, --x_levels) + 1;

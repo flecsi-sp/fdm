@@ -16,10 +16,11 @@ namespace gmg::task {
   @param rfa Fine-grid residual error.
   @param fca Coarse-grid RHS.
  */
-void full_weighting(mesh::accessor<ro> mf,
+void full_weighting(flecsi::exec::cpu,
+  mesh::accessor<ro> mf,
   mesh::accessor<ro> mc,
   field<double>::accessor<ro, ro> rfa,
-  field<double>::accessor<rw, ro> fca);
+  field<double>::accessor<rw, ro> fca) noexcept;
 
 /*!
   Interpolate the coarse-grid approximate solution to the fine-grid error
@@ -29,37 +30,43 @@ void full_weighting(mesh::accessor<ro> mf,
   @param uca Coarse-grid approximate solution.
   @param efa Fine-grid error correction.
  */
-void bilinear_interpolation(mesh::accessor<ro> mc,
+void bilinear_interpolation(flecsi::exec::cpu,
+  mesh::accessor<ro> mc,
   mesh::accessor<ro> mf,
   field<double>::accessor<ro, ro> uca,
-  field<double>::accessor<rw, ro> efa);
+  field<double>::accessor<rw, ro> efa) noexcept;
 
-void damped_jacobi(mesh::accessor<ro> m,
+void damped_jacobi(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<rw, ro> u_new,
   field<double>::accessor<ro, ro> u_old,
   field<double>::accessor<ro, ro> fa,
-  double omega);
+  double omega) noexcept;
 
-void red(mesh::accessor<ro> m,
+void red(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<rw, ro> ua,
-  field<double>::accessor<ro, ro> fa);
+  field<double>::accessor<ro, ro> fa) noexcept;
 
-void black(mesh::accessor<ro> m,
+void black(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<rw, ro> ua,
-  field<double>::accessor<ro, ro> fa);
+  field<double>::accessor<ro, ro> fa) noexcept;
 
-void residual(mesh::accessor<ro> m,
+void residual(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   stencil_field<five_pt>::accessor<ro, na> soa,
   field<double>::accessor<ro, ro> ua,
   field<double>::accessor<ro, ro> fa,
-  field<double>::accessor<wo, ro> ra);
+  field<double>::accessor<wo, ro> ra) noexcept;
 
-void correction(mesh::accessor<ro> m,
+void correction(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<rw, ro> ua,
-  field<double>::accessor<ro, ro> ea);
+  field<double>::accessor<ro, ro> ea) noexcept;
 
 } // namespace gmg::task
 

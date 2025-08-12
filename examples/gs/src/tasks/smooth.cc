@@ -3,9 +3,10 @@
 using namespace flecsi;
 
 void
-gs::task::red(mesh::accessor<ro> m,
+gs::task::red(exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<rw, ro> ua,
-  field<double>::accessor<ro, ro> fa) {
+  field<double>::accessor<ro, ro> fa) noexcept {
   auto u = m.mdspan<mesh::vertices>(ua);
   auto f = m.mdspan<mesh::vertices>(fa);
   const auto dxdy = m.dxdy();
@@ -26,9 +27,9 @@ gs::task::red(mesh::accessor<ro> m,
 } // smooth
 
 void
-gs::task::black(mesh::accessor<ro> m,
+gs::task::black(exec::cpu,mesh::accessor<ro> m,
   field<double>::accessor<rw, ro> ua,
-  field<double>::accessor<ro, ro> fa) {
+  field<double>::accessor<ro, ro> fa) noexcept {
   auto u = m.mdspan<mesh::vertices>(ua);
   auto f = m.mdspan<mesh::vertices>(fa);
   const auto dxdy = m.dxdy();

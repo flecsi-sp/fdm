@@ -6,11 +6,12 @@
 #define GMG_MG_HH
 
 #include <cstddef>
+#include <flecsi/execution.hh>
 
 namespace gmg {
 
-void vcycle(std::size_t level);
-void fmg(std::size_t level);
+void vcycle(flecsi::scheduler & sc, std::size_t level);
+void fmg(flecsi::scheduler & sc, std::size_t level);
 
 } // namespace gmg
 

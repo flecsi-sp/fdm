@@ -9,17 +9,21 @@
 
 namespace gs::task {
 
-void eggcarton(mesh::accessor<ro> m,
+void eggcarton(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> ua,
   field<double>::accessor<wo, na> fa,
   field<double>::accessor<wo, na> sa,
-  field<double>::accessor<wo, na> Aua);
+  field<double>::accessor<wo, na> Aua) noexcept;
 
-void constant(mesh::accessor<ro> m,
+void constant(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> fa,
-  double value);
+  double value) noexcept;
 
-void redblack(mesh::accessor<ro> m, field<double>::accessor<wo, na> fa);
+void redblack(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
+  field<double>::accessor<wo, na> fa) noexcept;
 
 } // namespace gs::task
 

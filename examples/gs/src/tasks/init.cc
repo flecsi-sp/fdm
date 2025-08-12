@@ -8,11 +8,12 @@ constexpr double K = 12.0;
 constexpr double L = 2.0;
 
 void
-gs::task::eggcarton(mesh::accessor<ro> m,
+gs::task::eggcarton(exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> ua,
   field<double>::accessor<wo, na> fa,
   field<double>::accessor<wo, na> sa,
-  field<double>::accessor<wo, na> Aua) {
+  field<double>::accessor<wo, na> Aua) noexcept {
   auto u = m.mdspan<mesh::vertices>(ua);
   auto f = m.mdspan<mesh::vertices>(fa);
   auto s = m.mdspan<mesh::vertices>(sa);
@@ -35,9 +36,10 @@ gs::task::eggcarton(mesh::accessor<ro> m,
 } // eggcarton
 
 void
-gs::task::constant(mesh::accessor<ro> m,
+gs::task::constant(exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<wo, na> fa,
-  double value) {
+  double value) noexcept {
   auto f = m.mdspan<mesh::vertices>(fa);
   forall(j, (m.vertices<mesh::y_axis, mesh::logical>()), "init_constant") {
     for(auto i : m.vertices<mesh::x_axis, mesh::logical>()) {
@@ -47,7 +49,9 @@ gs::task::constant(mesh::accessor<ro> m,
 }
 
 void
-gs::task::redblack(mesh::accessor<ro> m, field<double>::accessor<wo, na> fa) {
+gs::task::redblack(exec::cpu,
+  mesh::accessor<ro> m,
+  field<double>::accessor<wo, na> fa) noexcept {
   auto f = m.mdspan<mesh::vertices>(fa);
   for(auto j : m.vertices<mesh::y_axis, mesh::interior>()) {
     forall(i, m.red<mesh::x_axis>(j), "red") {

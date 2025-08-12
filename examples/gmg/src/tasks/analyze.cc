@@ -3,11 +3,12 @@
 using namespace gmg;
 
 void
-task::product_by_eigenvalue_jb(mesh::accessor<ro> m,
+task::product_by_eigenvalue_jb(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<rw, ro> sa,
   double omega,
   double kk,
-  double ll) {
+  double ll) noexcept {
   auto s = m.mdcolex<mesh::vertices>(sa);
   const auto dx_over_dy = m.xdelta() / m.ydelta();
   const auto dy_over_dx = m.ydelta() / m.xdelta();
@@ -26,10 +27,11 @@ task::product_by_eigenvalue_jb(mesh::accessor<ro> m,
 } // product_by_eigenvalue_jb
 
 void
-task::product_by_eigenvalue_gs(mesh::accessor<ro> m,
+task::product_by_eigenvalue_gs(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<rw, ro> sa,
   double kk,
-  double ll) {
+  double ll) noexcept {
   auto s = m.mdcolex<mesh::vertices>(sa);
   const auto dx = m.xdelta();
   const auto dy = m.ydelta();

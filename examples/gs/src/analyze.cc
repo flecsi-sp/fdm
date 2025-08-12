@@ -12,10 +12,13 @@ using namespace flecsi;
 
 void
 gs::action::analyze(control_policy & cp) {
+  auto & sc = cp.scheduler();
   util::annotation::rguard<analyze_region> guard;
-  double sum =
-    reduce<task::diff, exec::fold::sum>(cp.m, ud(cp.m), sd(cp.m)).get();
-  sum = execute<task::scale>(cp.m, sum).get();
-  const double l2 = sqrt(sum);
-  flog(info) << "l2 error: " << l2 << std::endl;
+
+  future<double> sum = sc.reduce<task::diff, exec::fold::sum>(
+    exec::on, *cp.m, ud(*cp.m), sd(*cp.m));
+  auto scaled = sc.execute<task::scale>(exec::on, *cp.m, sum);
+
+  // Display L2 error
+  sc.execute<task::display_l2>(exec::on, *cp.m, scaled);
 } // analyze

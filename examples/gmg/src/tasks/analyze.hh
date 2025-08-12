@@ -9,16 +9,18 @@
 
 namespace gmg::task {
 
-void product_by_eigenvalue_jb(mesh::accessor<ro> m,
+void product_by_eigenvalue_jb(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<rw, ro> sa,
   double omega,
   double k,
-  double l);
+  double l) noexcept;
 
-void product_by_eigenvalue_gs(mesh::accessor<ro> m,
+void product_by_eigenvalue_gs(flecsi::exec::cpu,
+  mesh::accessor<ro> m,
   field<double>::accessor<rw, ro> sa,
   double k,
-  double l);
+  double l) noexcept;
 
 } // namespace gmg::task
 
